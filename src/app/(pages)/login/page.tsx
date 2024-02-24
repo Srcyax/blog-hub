@@ -6,10 +6,10 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
 
-export default function Register() {
+export default function Login() {
 	const [username, setUsername] = useState<string>();
 	const [password, setPassword] = useState<string>();
-	const [register, setRegister] = useState<boolean>();
+	const [login, setLogin] = useState<boolean>();
 	const router = useRouter();
 
 	useEffect(() => {
@@ -18,8 +18,8 @@ export default function Register() {
 
 	return (
 		<main className="flex flex-col justify-center items-center">
-			<h1 className="m-5 text-3xl font-semibold">Register</h1>
-			<div className="flex flex-col justify-center items-center gap-4 shadow-3xl border-2 p-5 rounded-md">
+			<h1 className="m-5 text-3xl font-semibold">Log in</h1>
+			<div className="flex flex-col justify-center items-center gap-4 shadow-3xl border-2 p-5 rounded-md transition-all duration-200">
 				<Input
 					onChange={(e) => {
 						setUsername(e.target.value);
@@ -37,43 +37,40 @@ export default function Register() {
 				<Button
 					onClick={() => {
 						if (username !== undefined && password !== undefined) {
-							setRegister(true);
+							setLogin(true);
 							setTimeout(() => {
-								localStorage.setItem("user", username);
 								axios.get("api/users").then((res) => {
 									var users = res.data.users;
 
 									for (let i = 0; i < users.length; i++) {
-										if (username !== users[i].username)
+										if (
+											username !== users[i].username ||
+											password !== users[i].password
+										)
 											continue;
 
-										setRegister(false);
-										console.log("user already exists");
+										localStorage.setItem("user", username);
+										router.push("/");
 										return;
 									}
-									axios
-										.post("api/users", {
-											username: username,
-											password: password,
-										})
-										.then(() => {
-											router.push("/");
-										});
+
+									console.log("User not found");
+									setLogin(false);
 								});
 							}, 1500);
 						}
 					}}
 					className="mt-3"
 				>
-					Create
+					Log in
 				</Button>
 				<h1>
-					Already have an account?{" "}
-					<Link className="hover:underline" href="/login">
-						Login
+					Don't have an account?{" "}
+					<Link className="hover:underline" href="/register">
+						Register
 					</Link>
 				</h1>
-				{register ? (
+				{login ? (
 					<div role="status">
 						<svg
 							aria-hidden="true"

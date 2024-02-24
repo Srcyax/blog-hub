@@ -24,7 +24,7 @@ export default function Header() {
 						if (localStorage.getItem("user")) {
 							router.push("/post");
 						} else {
-							router.push("/register");
+							router.push("/login");
 						}
 					}}
 					className="px-5 hover:px-6 py-2 rounded-md shadow-3xl transition-all"
