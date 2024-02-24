@@ -1,15 +1,23 @@
 "use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Header() {
+	const [username, setUsername] = useState<string>();
 	const router = useRouter();
+	useEffect(() => {
+		setUsername(localStorage.getItem("user") ?? undefined);
+	});
 	return (
 		<header className="flex justify-between items-center p-5 border-2 shadow-lg">
-			<h1 className="text-2xl font-bold">
-				Blog
-				<strong className="text-green-500">Hub</strong>
-			</h1>
+			<Link href="/">
+				<h1 className="text-2xl font-bold">
+					Blog
+					<strong className="text-green-500">Hub</strong>
+				</h1>
+			</Link>
 			<section className="flex gap-4">
 				<button
 					onClick={() => {
@@ -23,10 +31,14 @@ export default function Header() {
 				>
 					Create post
 				</button>
-				<Avatar className="shadow-xl">
-					<AvatarImage src="" />
-					<AvatarFallback>CN</AvatarFallback>
-				</Avatar>
+				{username ? (
+					<Avatar className="shadow-xl">
+						<AvatarImage src="" />
+						<AvatarFallback>
+							{username?.charAt(0).toUpperCase()}
+						</AvatarFallback>
+					</Avatar>
+				) : null}
 			</section>
 		</header>
 	);
