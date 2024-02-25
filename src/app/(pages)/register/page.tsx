@@ -73,7 +73,7 @@ export default function Register() {
 											setRegister(false);
 										}
 									});
-							}, 1500);
+							}, 500);
 						} else {
 							toast("Invalid characters");
 						}

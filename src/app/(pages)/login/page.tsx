@@ -66,7 +66,7 @@ export default function Login() {
 											setLogin(false);
 										}
 									});
-							}, 1500);
+							}, 500);
 						} else {
 							toast("Invalid characters");
 						}
