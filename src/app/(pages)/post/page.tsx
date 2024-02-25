@@ -36,16 +36,17 @@ export default function Post() {
 					onClick={() => {
 						if (title !== undefined && content !== undefined) {
 							setPost(true);
-							setTimeout(() => {}, 1500);
-							axios
-								.post("api/posts", {
-									title: title,
-									content: content,
-									author: localStorage.getItem("user"),
-								})
-								.then((res) => {
-									router.push("/");
-								});
+							setTimeout(() => {
+								axios
+									.post("api/posts", {
+										title: title,
+										content: content,
+										author: localStorage.getItem("user"),
+									})
+									.then((res) => {
+										router.push("/");
+									});
+							}, 500);
 						} else {
 							toast("Invalid characters");
 						}
