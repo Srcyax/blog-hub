@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
@@ -35,6 +36,7 @@ export default function Login() {
 					placeholder="Password"
 				/>
 				<Button
+					disabled={login}
 					onClick={() => {
 						if (username !== undefined && password !== undefined) {
 							setLogin(true);
@@ -54,10 +56,12 @@ export default function Login() {
 										return;
 									}
 
-									console.log("User not found");
+									toast("User not found");
 									setLogin(false);
 								});
 							}, 1500);
+						} else {
+							toast("Invalid characters");
 						}
 					}}
 					className="mt-3"

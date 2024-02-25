@@ -7,9 +7,11 @@ import { useEffect, useState } from "react";
 export default function Header() {
 	const [username, setUsername] = useState<string>();
 	const router = useRouter();
+
 	useEffect(() => {
 		setUsername(localStorage.getItem("user") ?? undefined);
 	});
+
 	return (
 		<header className="flex justify-between items-center p-5 border-2 shadow-lg">
 			<Link href="/">

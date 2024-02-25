@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
+import { toast } from "sonner";
 
 export default function Register() {
 	const [username, setUsername] = useState<string>();
@@ -19,7 +20,7 @@ export default function Register() {
 	return (
 		<main className="flex flex-col justify-center items-center">
 			<h1 className="m-5 text-3xl font-semibold">Register</h1>
-			<div className="flex flex-col justify-center items-center gap-4 shadow-3xl border-2 p-5 rounded-md">
+			<div className="flex flex-col justify-center items-center gap-4 shadow-3xl border-2 p-5 rounded-md transition-all duration-200">
 				<Input
 					onChange={(e) => {
 						setUsername(e.target.value);
@@ -35,6 +36,7 @@ export default function Register() {
 					placeholder="Password"
 				/>
 				<Button
+					disabled={register}
 					onClick={() => {
 						if (username !== undefined && password !== undefined) {
 							setRegister(true);
@@ -48,7 +50,7 @@ export default function Register() {
 											continue;
 
 										setRegister(false);
-										console.log("user already exists");
+										toast("User already exists");
 										return;
 									}
 									axios
@@ -61,11 +63,13 @@ export default function Register() {
 										});
 								});
 							}, 1500);
+						} else {
+							toast("Invalid characters");
 						}
 					}}
 					className="mt-3"
 				>
-					Create
+					Register
 				</Button>
 				<h1>
 					Already have an account?{" "}

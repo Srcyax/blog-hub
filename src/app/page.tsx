@@ -1,17 +1,125 @@
+"use client";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import BlogPost from "./(pages)/post/post";
+import {
+	Pagination,
+	PaginationContent,
+	PaginationEllipsis,
+	PaginationItem,
+	PaginationLink,
+	PaginationNext,
+	PaginationPrevious,
+} from "@/components/ui/pagination";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useRouter } from "next/navigation";
+
+interface PostInfo {
+	title: string;
+	content: string;
+	author: string;
+}
+
+const PostsPerPage = 12;
+
 export default function Home() {
+	const [posts, setPosts] = useState<PostInfo[]>([]);
+	const [currentPage, setCurrentPage] = useState(1);
+	const [isPostsLoaded, setPostsLoaded] = useState(false);
+
+	const router = useRouter();
+
+	useEffect(() => {
+		axios.get("api/posts").then((res) => {
+			setTimeout(() => {
+				setPosts(res.data.posts);
+				setPostsLoaded(true);
+			}, 1000);
+		});
+	}, []);
+
+	const indexOfLastPost = currentPage * PostsPerPage;
+	const indexOfFirstPost = indexOfLastPost - PostsPerPage;
+	const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+
+	const totalPages = Math.ceil(posts.length / PostsPerPage);
+
+	const nextPage = () => {
+		setCurrentPage(currentPage + 1);
+		router.push(`/?page=${currentPage + 1}`);
+	};
+
+	const prevPage = () => {
+		setCurrentPage(currentPage - 1);
+		router.push(`/?page=${currentPage - 1}`);
+	};
+
+	const goToPage = (page: number) => {
+		setCurrentPage(page);
+		router.push(`/?page=${page}`);
+	};
+
+	const renderPageNumbers = () => {
+		const pageNumbers = [];
+		for (let i = 1; i <= totalPages; i++) {
+			pageNumbers.push(
+				<PaginationItem key={i}>
+					<PaginationLink onClick={() => goToPage(i)}>
+						{i}
+					</PaginationLink>
+				</PaginationItem>
+			);
+		}
+		return pageNumbers;
+	};
+
 	return (
 		<main className="flex flex-col justify-center items-center w-full h-full">
 			<h1 className="m-5 text-3xl font-semibold">Blogs</h1>
-			<div>
-				<div className="flex flex-col justify-center items-center w-72 shadow-3xl border-2 rounded-md">
-					<h1 className="m-3 text-2xl">Title</h1>
-					<p className="m-5 text-wrap leading-relaxed">
-						Lorem ipsum dolor sit amet consectetur adipisicing elit.
-						Earum, quae facilis sit voluptates deleniti iste quam
-						eum voluptas unde rerum commodi! Assumenda, ut fuga
-						quidem necessitatibus nemo ipsum totam cumque.
-					</p>
+
+			<div className="m-5">
+				<Pagination>
+					<PaginationContent>
+						<PaginationItem>
+							<PaginationPrevious
+								className="cursor-pointer"
+								onClick={() => {
+									if (currentPage === 1) return;
+									prevPage();
+								}}
+							/>
+						</PaginationItem>
+						{renderPageNumbers()}
+						<PaginationItem>
+							<PaginationEllipsis />
+						</PaginationItem>
+						<PaginationItem>
+							<PaginationNext
+								className="cursor-pointer"
+								onClick={() => {
+									if (currentPage === totalPages) return;
+									nextPage();
+								}}
+							/>
+						</PaginationItem>
+					</PaginationContent>
+				</Pagination>
+			</div>
+			{!isPostsLoaded ? (
+				<div className="grid grid-cols-4 gap-10 overflow-y-auto">
+					<Skeleton className="h-[305px] w-[250px] rounded-xl shadow-3xl" />
 				</div>
+			) : null}
+			<div className="grid grid-cols-4 grid-rows-3 gap-10 overflow-y-auto">
+				{currentPosts.map((post, index) => (
+					<div className="flex flex-1" key={index}>
+						<BlogPost
+							title={post.title}
+							content={post.content}
+							author={post.author}
+						/>
+					</div>
+				))}
 			</div>
 		</main>
 	);
