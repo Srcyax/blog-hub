@@ -105,11 +105,11 @@ export default function Home() {
 				</Pagination>
 			</div>
 			{!isPostsLoaded ? (
-				<div className="grid grid-cols-4 gap-10 overflow-y-auto">
+				<div className="grid desktop:grid-cols-4 smartphone:grid-cols-1 tablet:grid-cols-2 laptop:grid-cols-3 gap-10 overflow-y-auto">
 					<Skeleton className="h-[305px] w-[250px] rounded-xl shadow-3xl" />
 				</div>
 			) : null}
-			<div className="grid grid-cols-4 grid-rows-3 gap-10 overflow-y-auto">
+			<div className="grid desktop:grid-cols-4 smartphone:grid-cols-1 tablet:grid-cols-2 laptop:grid-cols-3 gap-10 overflow-y-auto">
 				{currentPosts.map((post, index) => (
 					<div className="flex flex-1" key={index}>
 						<BlogPost
