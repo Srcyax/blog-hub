@@ -31,11 +31,9 @@ export default function Home() {
 
 	useEffect(() => {
 		axios.get("api/posts").then((res) => {
-			setTimeout(() => {
-				setPosts(res.data.posts);
-				console.log(res.data.posts);
-				setPostsLoaded(true);
-			}, 1000);
+			setPosts(res.data.posts);
+			console.log(res.data.posts);
+			setPostsLoaded(true);
 		});
 	}, []);
 
