@@ -110,7 +110,7 @@ export default function Home() {
 				</div>
 			) : null}
 			<div className="grid desktop:grid-cols-4 smartphone:grid-cols-1 tablet:grid-cols-2 laptop:grid-cols-3 gap-10 overflow-y-auto">
-				{currentPosts.map((post, index) => (
+				{currentPosts.reverse().map((post, index) => (
 					<div className="flex flex-1" key={index}>
 						<BlogPost
 							title={post.title}
