@@ -8,14 +8,10 @@ import Link from "next/link";
 import { toast } from "sonner";
 
 export default function Register() {
-	const [username, setUsername] = useState<string>();
-	const [password, setPassword] = useState<string>();
+	const [password, setPassword] = useState<string>("");
+	const [username, setUsername] = useState<string>("");
 	const [register, setRegister] = useState<boolean>();
 	const router = useRouter();
-
-	useEffect(() => {
-		localStorage.removeItem("user");
-	});
 
 	return (
 		<main className="flex flex-col justify-center items-center">
@@ -41,27 +37,42 @@ export default function Register() {
 						if (username !== undefined && password !== undefined) {
 							setRegister(true);
 							setTimeout(() => {
-								localStorage.setItem("user", username);
-								axios.get("api/users").then((res) => {
-									var users = res.data.users;
-
-									for (let i = 0; i < users.length; i++) {
-										if (username !== users[i].username)
-											continue;
-
-										setRegister(false);
-										toast("User already exists");
-										return;
-									}
-									axios
-										.post("api/users", {
-											username: username,
-											password: password,
-										})
-										.then(() => {
-											router.push("/");
-										});
-								});
+								axios
+									.post("api/register", {
+										username: username,
+										password: password,
+									})
+									.then((res) => {
+										localStorage.setItem(
+											"user",
+											res.data.user.username
+										);
+										router.push("/");
+									})
+									.catch((error) => {
+										if (error.response) {
+											if (error.response.status === 400) {
+												toast(
+													"This user is already registered"
+												);
+												setRegister(false);
+											} else {
+												toast("Error registering user");
+												console.error(
+													"Error registering user: ",
+													error.message
+												);
+												setRegister(false);
+											}
+										} else {
+											toast("Error when making requests");
+											console.error(
+												"Error when making request:",
+												error.message
+											);
+											setRegister(false);
+										}
+									});
 							}, 1500);
 						} else {
 							toast("Invalid characters");

@@ -1,18 +1,25 @@
-export var posts = [];
+import { PrismaClient, PrismaClientKnownRequestError } from "@prisma/client";
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
 	const { method } = req;
+	const prisma = new PrismaClient();
 
 	switch (method) {
 		case "POST":
-			posts.push(req.body);
-			res.status(200).json({
-				message: "Sucess",
-				posts,
+			const post = await prisma.post.create({
+				data: {
+					title: req.body.title,
+					content: req.body.content,
+					author: req.body.author,
+					authorId: 0,
+				},
 			});
-			break;
+			return res.status(200).json({
+				message: "Sucess",
+				post,
+			});
 		case "GET":
-			res.status(200).json({ posts });
-			break;
+			const posts = await prisma.post.findMany();
+			return res.status(200).json({ posts });
 	}
 }

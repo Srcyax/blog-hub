@@ -33,6 +33,7 @@ export default function Home() {
 		axios.get("api/posts").then((res) => {
 			setTimeout(() => {
 				setPosts(res.data.posts);
+				console.log(res.data.posts);
 				setPostsLoaded(true);
 			}, 1000);
 		});
@@ -74,7 +75,7 @@ export default function Home() {
 	};
 
 	return (
-		<main className="flex flex-col justify-center items-center w-full h-full">
+		<main className="flex h-full w-full flex-col items-center justify-center">
 			<h1 className="m-5 text-3xl font-semibold">Blogs</h1>
 
 			<div className="m-5">
