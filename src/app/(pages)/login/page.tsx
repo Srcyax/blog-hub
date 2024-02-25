@@ -69,7 +69,7 @@ export default function Login() {
 					Log in
 				</Button>
 				<h1>
-					Don't have an account?{" "}
+					Dont have an account?{" "}
 					<Link className="hover:underline" href="/register">
 						Register
 					</Link>
