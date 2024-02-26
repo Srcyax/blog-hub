@@ -20,7 +20,7 @@ interface PostInfo {
 	author: string;
 }
 
-const PostsPerPage = 12;
+const PostsPerPage = 8;
 
 export default function Home() {
 	const [posts, setPosts] = useState<PostInfo[]>([]);
