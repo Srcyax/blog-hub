@@ -27,6 +27,7 @@ export default function Header() {
 	const router = useRouter();
 
 	useEffect(() => {
+		if (!sessionStorage.getItem("id")) return;
 		axios
 			.post("/api/profile/getusername", {
 				userId: parseInt(sessionStorage.getItem("id") as string),
