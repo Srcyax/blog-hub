@@ -6,7 +6,11 @@ export default async function handler(req, res) {
 
 	switch (method) {
 		case "POST":
-			if (req.body.title.length > 25 || req.body.content.length > 255) {
+			if (
+				req.body.title.length > 25 ||
+				req.body.content.length > 255 ||
+				req.body.author.length > 10
+			) {
 				return res.status(500).json({
 					message: "Its content is very extensive",
 				});
