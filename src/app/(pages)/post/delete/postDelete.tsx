@@ -29,7 +29,7 @@ export default function DeletePost({ id }: PostInfo) {
 				toast(res.data.message);
 				setTimeout(() => {
 					location.reload();
-				}, 1000);
+				}, 300);
 			})
 			.catch((error) => {
 				toast(error.response.data.error);

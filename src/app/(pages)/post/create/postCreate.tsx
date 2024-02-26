@@ -13,6 +13,29 @@ export default function Create() {
 	const router = useRouter();
 
 	const [post, setPost] = useState<boolean>();
+
+	const handleCreatePost = () => {
+		axios
+			.post("/api/posts", {
+				title: title,
+				content: content,
+				userId: parseInt(sessionStorage.getItem("id") as string),
+			})
+			.then((res) => {
+				router.push("/");
+			})
+			.catch((error) => {
+				if (error.response) {
+					if (error.response.status) {
+						toast("(" + error.response.status + ") " + error.response.data.error);
+						setPost(false);
+					} else {
+						toast("Unable to publish this post");
+						setPost(false);
+					}
+				}
+			});
+	};
 	return (
 		<>
 			<Input
@@ -32,31 +55,10 @@ export default function Create() {
 			/>
 			<Button
 				onClick={() => {
-					if (title !== undefined && content !== undefined) {
+					if (title && content) {
 						setPost(true);
 						setTimeout(() => {
-							axios
-								.post("/api/posts", {
-									title: title,
-									content: content,
-									userId: parseInt(sessionStorage.getItem("id") as string),
-								})
-								.then((res) => {
-									router.push("/");
-								})
-								.catch((error) => {
-									if (error.response) {
-										if (error.response.status) {
-											toast(
-												"(" + error.response.status + ") " + error.response.data.error
-											);
-											setPost(false);
-										} else {
-											toast("Unable to publish this post");
-											setPost(false);
-										}
-									}
-								});
+							handleCreatePost();
 						}, 500);
 					} else {
 						toast("Invalid characters");
