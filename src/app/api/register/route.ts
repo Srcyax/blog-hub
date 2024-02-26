@@ -41,21 +41,3 @@ export async function POST(req: NextRequest) {
 		}
 	}
 }
-
-/*export default async function handler(req, res) {
-	const { method } = req;
-
-	switch (method) {
-		case "POST":
-			
-			try {
-				
-			} catch (error) {
-				
-			} finally {
-				await prisma.$disconnect();
-			}
-			break;
-	}
-}
-*/
