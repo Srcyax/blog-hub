@@ -63,9 +63,7 @@ export default function Home() {
 		for (let i = 1; i <= totalPages; i++) {
 			pageNumbers.push(
 				<PaginationItem key={i}>
-					<PaginationLink onClick={() => goToPage(i)}>
-						{i}
-					</PaginationLink>
+					<PaginationLink onClick={() => goToPage(i)}>{i}</PaginationLink>
 				</PaginationItem>
 			);
 		}
