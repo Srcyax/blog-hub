@@ -24,6 +24,19 @@ export default function Header() {
 	const [newUsername, setNewUsername] = useState<string>();
 	const router = useRouter();
 
+	useEffect(() => {
+		axios
+			.post("/api/profile/getusername", {
+				userId: parseInt(sessionStorage.getItem("id") as string),
+			})
+			.then((res) => {
+				setUsername(res.data.user.username);
+			})
+			.catch((error) => {
+				toast(`${error.status} ${error}`);
+			});
+	});
+
 	const handleEditProfile = () => {
 		axios
 			.post("/api/profile", {
@@ -65,21 +78,7 @@ export default function Header() {
 				</button>
 				{username ? (
 					<Sheet>
-						<SheetTrigger
-							onClick={() => {
-								axios
-									.post("/api/profile/getusername", {
-										userId: parseInt(sessionStorage.getItem("id") as string),
-									})
-									.then((res) => {
-										setUsername(res.data.user.username);
-									})
-									.catch((error) => {
-										toast(`${error.status} ${error}`);
-									});
-							}}
-							className="hover:opacity-70 transition-all"
-						>
+						<SheetTrigger className="hover:opacity-70 transition-all">
 							<Avatar className="shadow-xl">
 								<AvatarImage src="" />
 								<AvatarFallback>{username?.charAt(0).toUpperCase()}</AvatarFallback>

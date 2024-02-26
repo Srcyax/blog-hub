@@ -15,6 +15,15 @@ export async function POST(req: NextRequest) {
 			},
 		});
 
+		await prisma.post.updateMany({
+			where: {
+				authorId: body.userId,
+			},
+			data: {
+				author: body.newUsername,
+			},
+		});
+
 		return NextResponse.json(
 			{ message: "Username changed successfully", profile },
 			{ status: 200 }
