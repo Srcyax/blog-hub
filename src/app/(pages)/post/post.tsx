@@ -19,6 +19,8 @@ import Content from "./postContent";
 import DeletePost from "./delete/postDelete";
 import EditPost from "./edit/postEdit";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 interface PostInfo {
 	id: number;
 	title: string;
@@ -39,17 +41,20 @@ export default function BlogPost({
 			<Content title={title} content={content} />
 
 			<p className="m-5">
-				{parseInt(sessionStorage.getItem("id") as string) === authorId ? (
-					<div className="flex flex-row gap-2">
-						<DeletePost id={id} />
-						<EditPost id={id} title={title} content={content} />
-					</div>
-				) : null}
-				by <strong className="text-green-500">{author}</strong>
+				<div className="flex gap-2 items-center">
+					<Avatar className="shadow-xl">
+						<AvatarImage src="" />
+						<AvatarFallback>{author?.charAt(0).toUpperCase()}</AvatarFallback>
+					</Avatar>
+					<strong className="text-green-500">{author}</strong>
+					{parseInt(sessionStorage.getItem("id") as string) === authorId ? (
+						<div className="flex flex-row gap-2 items-center m-1">
+							<DeletePost id={id} />
+							<EditPost id={id} title={title} content={content} />
+						</div>
+					) : null}
+				</div>
 			</p>
 		</div>
 	);
-}
-function usestate<T>(): [any, any] {
-	throw new Error("Function not implemented.");
 }

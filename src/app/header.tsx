@@ -72,7 +72,7 @@ export default function Header() {
 										userId: parseInt(sessionStorage.getItem("id") as string),
 									})
 									.then((res) => {
-										setNewUsername(res.data.user.username);
+										setUsername(res.data.user.username);
 									})
 									.catch((error) => {
 										toast(`${error.status} ${error}`);
