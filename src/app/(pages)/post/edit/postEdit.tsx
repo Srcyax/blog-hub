@@ -25,6 +25,14 @@ export default function EditPost({ id, title, content }: PostInfo) {
 	const [newContent, setNewContent] = useState<string>();
 
 	const handleEdit = () => {
+		if (
+			newTitle?.match(/[^a-zA-Z0-9]/g) ||
+			newContent?.match(/[^a-zA-Z0-9]/g)
+		) {
+			toast("Special characters are not allowed");
+			return;
+		}
+
 		axios
 			.post("/api/posts/edit-post", {
 				id: id,
@@ -74,7 +82,9 @@ export default function EditPost({ id, title, content }: PostInfo) {
 				</AlertDialogHeader>
 				<AlertDialogFooter>
 					<AlertDialogCancel>Cancel</AlertDialogCancel>
-					<AlertDialogAction onClick={handleEdit}>Submit</AlertDialogAction>
+					<AlertDialogAction onClick={handleEdit}>
+						Submit
+					</AlertDialogAction>
 				</AlertDialogFooter>
 			</AlertDialogContent>
 		</AlertDialog>

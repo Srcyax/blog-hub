@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { match } from "assert";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -15,6 +16,13 @@ export default function Create() {
 	const [post, setPost] = useState<boolean>();
 
 	const handleCreatePost = () => {
+		toast("Special characters are not allowed");
+		if (title?.match(/[^a-zA-Z0-9]/g) || content?.match(/[^a-zA-Z0-9]/g)) {
+			toast("Special characters are not allowed");
+			setPost(false);
+			return;
+		}
+
 		axios
 			.post("/api/posts", {
 				title: title,
@@ -27,7 +35,12 @@ export default function Create() {
 			.catch((error) => {
 				if (error.response) {
 					if (error.response.status) {
-						toast("(" + error.response.status + ") " + error.response.data.error);
+						toast(
+							"(" +
+								error.response.status +
+								") " +
+								error.response.data.error
+						);
 						setPost(false);
 					} else {
 						toast("Unable to publish this post");

@@ -7,6 +7,13 @@ export async function POST(req: NextRequest) {
 
 	const prisma = new PrismaClient();
 
+	if (body.newTitle.length > 25 || body.newContent.length > 255) {
+		return NextResponse.json(
+			{ error: "Its content is very extensive" },
+			{ status: 500 }
+		);
+	}
+
 	try {
 		const updatePost = await prisma.post.update({
 			where: {

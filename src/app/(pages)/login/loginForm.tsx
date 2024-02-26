@@ -14,6 +14,12 @@ export default function LoginForm() {
 	const router = useRouter();
 
 	const handleLogin = () => {
+		if (username?.match(/[^a-zA-Z0-9]/g)) {
+			toast("Special characters are not allowed");
+			setLogin(false);
+			return;
+		}
+
 		axios
 			.post("/api/login", {
 				username: username,
@@ -26,7 +32,12 @@ export default function LoginForm() {
 			.catch((error) => {
 				if (error.response) {
 					if (error.response.status) {
-						toast("(" + error.response.status + ") " + error.response.data.error);
+						toast(
+							"(" +
+								error.response.status +
+								") " +
+								error.response.data.error
+						);
 						setLogin(false);
 					}
 				} else {

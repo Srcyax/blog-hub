@@ -13,17 +13,13 @@ export default function RegisterForm() {
 	const [register, setRegister] = useState<boolean>();
 	const router = useRouter();
 
-	var specialChars = "<>@!#$%^&*()_+[]{}?:;|'\"\\,./~`-=";
-	var checkForSpecialChar = function (string: string) {
-		for (let i = 0; i < specialChars.length; i++) {
-			if (string.indexOf(specialChars[i]) > -1) {
-				return true;
-			}
-		}
-		return false;
-	};
-
 	const handleRegister = () => {
+		if (username?.match(/[^a-zA-Z0-9]/g)) {
+			toast("Special characters are not allowed");
+			setRegister(false);
+			return;
+		}
+
 		axios
 			.post("/api/register", {
 				username: username,
@@ -36,7 +32,12 @@ export default function RegisterForm() {
 			.catch((error) => {
 				if (error.response) {
 					if (error.response.status) {
-						toast("(" + error.response.status + ") " + error.response.data.error);
+						toast(
+							"(" +
+								error.response.status +
+								") " +
+								error.response.data.error
+						);
 						setRegister(false);
 					}
 				} else {
@@ -68,11 +69,6 @@ export default function RegisterForm() {
 				disabled={register}
 				onClick={() => {
 					if (username && password) {
-						if (checkForSpecialChar(username)) {
-							toast(`Don't use special characters ${specialChars}`);
-							setRegister(false);
-							return;
-						}
 						setRegister(true);
 						setTimeout(handleRegister, 500);
 					} else {
