@@ -51,8 +51,8 @@ export default function Login() {
 									})
 									.catch((error) => {
 										if (error.response) {
-											if (error.response.status === 404) {
-												toast("User not found");
+											if (error.response.status) {
+												toast(error.response.data.message);
 												setLogin(false);
 											}
 										} else {

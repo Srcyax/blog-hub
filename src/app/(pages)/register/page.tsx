@@ -59,17 +59,13 @@ export default function Register() {
 										password: password,
 									})
 									.then((res) => {
-										localStorage.setItem("user", res.data.user.username);
+										sessionStorage.setItem("user", res.data.user.username);
 										router.push("/");
 									})
 									.catch((error) => {
 										if (error.response) {
-											if (error.response.status === 400) {
-												toast("This user is already registered");
-												setRegister(false);
-											} else {
-												toast("Error registering user");
-												console.error("Error registering user: ", error.message);
+											if (error.response.status) {
+												toast(error.response.data.message);
 												setRegister(false);
 											}
 										} else {

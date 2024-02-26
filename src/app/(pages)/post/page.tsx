@@ -47,12 +47,14 @@ export default function Post() {
 										router.push("/");
 									})
 									.catch((error) => {
-										if (error.response === 500) {
-											toast("Its content is very extensive");
-											setPost(false);
-										} else {
-											toast("Unable to publish this post");
-											setPost(false);
+										if (error.response) {
+											if (error.response.status) {
+												toast(error.response.data.message);
+												setPost(false);
+											} else {
+												toast("Unable to publish this post");
+												setPost(false);
+											}
 										}
 									});
 							}, 500);
