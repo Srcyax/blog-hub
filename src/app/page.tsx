@@ -22,7 +22,7 @@ interface PostInfo {
 	authorId: number;
 }
 
-const PostsPerPage = 8;
+const PostsPerPage = 4;
 
 export default function Home() {
 	const [posts, setPosts] = useState<PostInfo[]>([]);
@@ -65,7 +65,9 @@ export default function Home() {
 		for (let i = 1; i <= totalPages; i++) {
 			pageNumbers.push(
 				<PaginationItem key={i}>
-					<PaginationLink onClick={() => goToPage(i)}>{i}</PaginationLink>
+					<PaginationLink onClick={() => goToPage(i)}>
+						{i}
+					</PaginationLink>
 				</PaginationItem>
 			);
 		}
