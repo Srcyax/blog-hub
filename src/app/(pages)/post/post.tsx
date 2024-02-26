@@ -128,7 +128,6 @@ export default function BlogPost({ id, title, content, author }: PostInfo) {
 												.post("/api/posts/edit-post", {
 													id: id,
 													title: title,
-													content: content,
 													newTitle: newTitle,
 													newContent: newContent,
 												})
