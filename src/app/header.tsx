@@ -74,7 +74,9 @@ export default function Header() {
 				</h1>
 			</Link>
 			<section className="flex gap-4">
-				<button
+				<Button
+					variant="outline"
+					className="px-5 hover:px-6 py-2 rounded-md shadow-3xl transition-all"
 					onClick={() => {
 						if (sessionStorage.getItem("id")) {
 							router.push("/post");
@@ -82,16 +84,26 @@ export default function Header() {
 							router.push("/login");
 						}
 					}}
-					className="px-5 hover:px-6 py-2 rounded-md shadow-3xl transition-all"
 				>
-					Create post
-				</button>
-				{username ? (
+					Publish
+				</Button>
+				{!username ? (
+					<Button
+						className="px-5 hover:px-6 py-2 rounded-md shadow-3xl transition-all"
+						onClick={() => {
+							router.push("/login");
+						}}
+					>
+						Login
+					</Button>
+				) : (
 					<Sheet>
 						<SheetTrigger className="hover:opacity-70 transition-all">
 							<Avatar className="shadow-xl">
 								<AvatarImage src="" />
-								<AvatarFallback>{username?.charAt(0).toUpperCase()}</AvatarFallback>
+								<AvatarFallback>
+									{username?.charAt(0).toUpperCase()}
+								</AvatarFallback>
 							</Avatar>
 						</SheetTrigger>
 						<SheetContent className="w-[400px] sm:w-[540px]">
@@ -115,7 +127,9 @@ export default function Header() {
 										type="text"
 										placeholder="Url image"
 									/>
-									<Button onClick={handleEditProfile}>Submit</Button>
+									<Button onClick={handleEditProfile}>
+										Submit
+									</Button>
 									{submit ? (
 										<div role="status">
 											<svg
@@ -134,7 +148,9 @@ export default function Header() {
 													fill="currentFill"
 												/>
 											</svg>
-											<span className="sr-only">Loading...</span>
+											<span className="sr-only">
+												Loading...
+											</span>
 										</div>
 									) : null}
 								</div>
@@ -152,7 +168,7 @@ export default function Header() {
 							</SheetFooter>
 						</SheetContent>
 					</Sheet>
-				) : null}
+				)}
 			</section>
 		</header>
 	);
