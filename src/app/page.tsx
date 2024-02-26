@@ -34,7 +34,7 @@ export default function Home() {
 	useEffect(() => {
 		axios.get("api/posts").then((res) => {
 			setPosts(res.data.posts);
-			console.log(res.data.posts);
+			//console.log(res.data.posts);
 			setPostsLoaded(true);
 		});
 	}, []);
