@@ -41,7 +41,7 @@ export default function Post() {
 									.post("api/posts", {
 										title: title,
 										content: content,
-										author: localStorage.getItem("user"),
+										author: sessionStorage.getItem("user")?.toString(),
 									})
 									.then((res) => {
 										router.push("/");

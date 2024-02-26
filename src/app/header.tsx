@@ -9,7 +9,7 @@ export default function Header() {
 	const router = useRouter();
 
 	useEffect(() => {
-		setUsername(localStorage.getItem("user") ?? undefined);
+		setUsername(sessionStorage.getItem("user") ?? undefined);
 	});
 
 	return (
@@ -23,7 +23,7 @@ export default function Header() {
 			<section className="flex gap-4">
 				<button
 					onClick={() => {
-						if (localStorage.getItem("user")) {
+						if (sessionStorage.getItem("user")) {
 							router.push("/post");
 						} else {
 							router.push("/login");
@@ -36,9 +36,7 @@ export default function Header() {
 				{username ? (
 					<Avatar className="shadow-xl">
 						<AvatarImage src="" />
-						<AvatarFallback>
-							{username?.charAt(0).toUpperCase()}
-						</AvatarFallback>
+						<AvatarFallback>{username?.charAt(0).toUpperCase()}</AvatarFallback>
 					</Avatar>
 				) : null}
 			</section>

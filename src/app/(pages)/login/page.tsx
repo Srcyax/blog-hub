@@ -44,10 +44,7 @@ export default function Login() {
 										password: password,
 									})
 									.then((res) => {
-										localStorage.setItem(
-											"user",
-											res.data.user.username
-										);
+										sessionStorage.setItem("user", res.data.user.username);
 										router.push("/");
 
 										setLogin(false);
@@ -60,10 +57,7 @@ export default function Login() {
 											}
 										} else {
 											toast("Error when making requests");
-											console.error(
-												"Error when making request:",
-												error.message
-											);
+											console.error("Error when making request:", error.message);
 											setLogin(false);
 										}
 									});
