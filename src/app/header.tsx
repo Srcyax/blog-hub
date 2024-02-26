@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 import { toast } from "sonner";
+import { LogOut } from "lucide-react";
 
 export default function Header() {
 	const [username, setUsername] = useState<string>();
@@ -139,12 +140,13 @@ export default function Header() {
 								</div>
 								<div className="absolute bottom-2">
 									<Button
+										className="flex gap-3"
 										onClick={() => {
 											sessionStorage.clear();
 											location.reload();
 										}}
 									>
-										Log out
+										Log out <LogOut />
 									</Button>
 								</div>
 							</SheetFooter>
