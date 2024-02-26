@@ -52,7 +52,9 @@ export default function Login() {
 									.catch((error) => {
 										if (error.response) {
 											if (error.response.status) {
-												toast(error.response.data.message);
+												toast(
+													"(" + error.response.status + ") " + error.response.data.message
+												);
 												setLogin(false);
 											}
 										} else {

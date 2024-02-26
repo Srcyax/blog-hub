@@ -49,7 +49,9 @@ export default function Post() {
 									.catch((error) => {
 										if (error.response) {
 											if (error.response.status) {
-												toast(error.response.data.message);
+												toast(
+													"(" + error.response.status + ") " + error.response.data.message
+												);
 												setPost(false);
 											} else {
 												toast("Unable to publish this post");

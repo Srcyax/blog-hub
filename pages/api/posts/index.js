@@ -34,7 +34,7 @@ export default async function handler(req, res) {
 					error.code === "P2002"
 				) {
 					res.status(402).json({
-						message: "This Title is already posted",
+						message: "This title is already posted",
 					});
 				}
 			} finally {

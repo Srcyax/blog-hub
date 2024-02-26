@@ -65,7 +65,9 @@ export default function Register() {
 									.catch((error) => {
 										if (error.response) {
 											if (error.response.status) {
-												toast(error.response.data.message);
+												toast(
+													"(" + error.response.status + ") " + error.response.data.message
+												);
 												setRegister(false);
 											}
 										} else {
