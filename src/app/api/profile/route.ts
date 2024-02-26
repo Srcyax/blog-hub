@@ -6,6 +6,19 @@ export async function POST(req: NextRequest) {
 
 	const prisma = new PrismaClient();
 	try {
+		const user = await prisma.user.findUnique({
+			where: {
+				id: body.userId,
+			},
+		});
+
+		if (user?.username === body.newUsername) {
+			return NextResponse.json(
+				{ message: "The username cannot be the same" },
+				{ status: 500 }
+			);
+		}
+
 		const profile = await prisma.user.update({
 			where: {
 				id: body.userId,
