@@ -24,17 +24,24 @@ interface PostInfo {
 	title: string;
 	content: string;
 	author: string;
+	authorId: number;
 }
 
-export default function BlogPost({ id, title, content, author }: PostInfo) {
+export default function BlogPost({
+	id,
+	title,
+	content,
+	author,
+	authorId,
+}: PostInfo) {
 	return (
 		<div className="group flex flex-col justify-between m-5 w-72 h-80 overflow-y-auto overflow-hidden shadow-3xl border-2 rounded-md">
 			<Content title={title} content={content} />
 
 			<p className="m-5">
-				{sessionStorage.getItem("user")?.toString() === author ? (
+				{parseInt(sessionStorage.getItem("id") as string) === authorId ? (
 					<div className="flex flex-row gap-2">
-						<DeletePost id={id} title={title} />
+						<DeletePost id={id} />
 						<EditPost id={id} title={title} content={content} />
 					</div>
 				) : null}

@@ -19,6 +19,7 @@ interface PostInfo {
 	title: string;
 	content: string;
 	author: string;
+	authorId: number;
 }
 
 const PostsPerPage = 8;
@@ -116,6 +117,7 @@ export default function Home() {
 							title={post.title}
 							content={post.content}
 							author={post.author}
+							authorId={post.authorId}
 						/>
 					</div>
 				))}

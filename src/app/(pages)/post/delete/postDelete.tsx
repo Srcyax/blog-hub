@@ -16,15 +16,14 @@ import { toast } from "sonner";
 
 interface PostInfo {
 	id: number;
-	title: string;
 }
 
-export default function DeletePost({ id, title }: PostInfo) {
+export default function DeletePost({ id }: PostInfo) {
 	const handleDelete = () => {
 		axios
 			.post("api/posts/delete-post", {
 				id: id,
-				title: title,
+				userId: parseInt(sessionStorage.getItem("id") as string),
 			})
 			.then((res) => {
 				toast(res.data.message);

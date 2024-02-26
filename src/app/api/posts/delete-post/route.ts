@@ -7,13 +7,28 @@ export async function POST(req: NextRequest) {
 	const prisma = new PrismaClient();
 
 	try {
-		const post = await prisma.post.delete({
+		const post = await prisma.post.findUnique({
 			where: {
 				id: body.id,
-				title: body.title,
 			},
 		});
 
+		if (!post) {
+			return NextResponse.json({ error: "Post not found" }, { status: 404 });
+		}
+
+		if (post.authorId !== body.userId) {
+			return NextResponse.json(
+				{ error: "You do not have permission to delete this post." },
+				{ status: 403 }
+			);
+		}
+
+		const deletedPost = await prisma.post.delete({
+			where: {
+				id: body.id,
+			},
+		});
 		return NextResponse.json({ message: "Successfully deleted" });
 	} catch (error) {
 		return NextResponse.json({ error: error });

@@ -20,7 +20,7 @@ export default function LoginForm() {
 				password: password,
 			})
 			.then((res) => {
-				sessionStorage.setItem("user", res.data.user.username);
+				sessionStorage.setItem("id", res.data.user.id);
 				router.push("/");
 			})
 			.catch((error) => {

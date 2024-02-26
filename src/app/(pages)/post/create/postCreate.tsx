@@ -36,10 +36,10 @@ export default function Create() {
 						setPost(true);
 						setTimeout(() => {
 							axios
-								.post("api/posts", {
+								.post("/api/posts", {
 									title: title,
 									content: content,
-									author: sessionStorage.getItem("user")?.toString(),
+									userId: parseInt(sessionStorage.getItem("id") as string),
 								})
 								.then((res) => {
 									router.push("/");
@@ -48,7 +48,7 @@ export default function Create() {
 									if (error.response) {
 										if (error.response.status) {
 											toast(
-												"(" + error.response.status + ") " + error.response.data.message
+												"(" + error.response.status + ") " + error.response.data.error
 											);
 											setPost(false);
 										} else {

@@ -28,7 +28,6 @@ export default function EditPost({ id, title, content }: PostInfo) {
 		axios
 			.post("/api/posts/edit-post", {
 				id: id,
-				title: title,
 				newTitle: newTitle,
 				newContent: newContent,
 			})
