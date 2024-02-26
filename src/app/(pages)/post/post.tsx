@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import { useState } from "react";
 
 interface PostInfo {
 	id: number;
@@ -23,6 +24,9 @@ interface PostInfo {
 }
 
 export default function BlogPost({ id, title, content, author }: PostInfo) {
+	const [newTitle, setNewTitle] = useState<string>();
+	const [newContent, setNewContent] = useState<string>();
+
 	return (
 		<div className="group flex flex-col justify-between m-5 w-72 h-80 overflow-y-auto overflow-hidden shadow-3xl border-2 rounded-md">
 			<div className="flex flex-col justify-start items-center">
@@ -99,7 +103,7 @@ export default function BlogPost({ id, title, content, author }: PostInfo) {
 											defaultValue={title}
 											maxLength={25}
 											onChange={(e) => {
-												//setTitle(e.target.value);
+												setNewTitle(e.target.value);
 											}}
 											type="text"
 											placeholder="Title"
@@ -108,7 +112,7 @@ export default function BlogPost({ id, title, content, author }: PostInfo) {
 											defaultValue={content}
 											maxLength={255}
 											onChange={(e) => {
-												//setContent(e.target.value);
+												setNewContent(e.target.value);
 											}}
 											placeholder="Enter your content message here."
 										/>
@@ -118,7 +122,27 @@ export default function BlogPost({ id, title, content, author }: PostInfo) {
 									<AlertDialogCancel>
 										Cancel
 									</AlertDialogCancel>
-									<AlertDialogAction onClick={() => {}}>
+									<AlertDialogAction
+										onClick={() => {
+											axios
+												.post("/api/posts/edit-post", {
+													id: id,
+													title: title,
+													content: content,
+													newTitle: newTitle,
+													newContent: newContent,
+												})
+												.then((res) => {
+													toast(res.data.message);
+													setTimeout(() => {
+														location.reload();
+													}, 1000);
+												})
+												.catch((error) => {
+													toast(error.response.error);
+												});
+										}}
+									>
 										Submit
 									</AlertDialogAction>
 								</AlertDialogFooter>
@@ -130,4 +154,7 @@ export default function BlogPost({ id, title, content, author }: PostInfo) {
 			</p>
 		</div>
 	);
+}
+function usestate<T>(): [any, any] {
+	throw new Error("Function not implemented.");
 }
