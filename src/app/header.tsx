@@ -97,7 +97,7 @@ export default function Header() {
 							<SheetHeader>
 								<SheetTitle>Edit profile</SheetTitle>
 							</SheetHeader>
-							<SheetFooter>
+							<SheetFooter className="flex flex-col justify-between items-center">
 								<div className="flex flex-col items-center gap-4 m-9">
 									<Input
 										maxLength={25}
@@ -136,6 +136,16 @@ export default function Header() {
 											<span className="sr-only">Loading...</span>
 										</div>
 									) : null}
+								</div>
+								<div className="absolute bottom-2">
+									<Button
+										onClick={() => {
+											sessionStorage.clear();
+											location.reload();
+										}}
+									>
+										Log out
+									</Button>
 								</div>
 							</SheetFooter>
 						</SheetContent>
