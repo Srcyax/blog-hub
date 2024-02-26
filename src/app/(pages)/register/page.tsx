@@ -47,32 +47,44 @@ export default function Register() {
 					onClick={() => {
 						if (username !== undefined && password !== undefined) {
 							if (checkForSpecialChar(username)) {
-								toast(`Don't use special characters ${specialChars}`);
+								toast(
+									`Don't use special characters ${specialChars}`
+								);
 								setRegister(false);
 								return;
 							}
 							setRegister(true);
 							setTimeout(() => {
 								axios
-									.post("api/register", {
+									.post("/api/register", {
 										username: username,
 										password: password,
 									})
 									.then((res) => {
-										sessionStorage.setItem("user", res.data.user.username);
+										sessionStorage.setItem(
+											"user",
+											res.data.user.username
+										);
 										router.push("/");
 									})
 									.catch((error) => {
 										if (error.response) {
 											if (error.response.status) {
 												toast(
-													"(" + error.response.status + ") " + error.response.data.message
+													"(" +
+														error.response.status +
+														") " +
+														error.response.data
+															.error
 												);
 												setRegister(false);
 											}
 										} else {
 											toast("Error when making requests");
-											console.error("Error when making request:", error.message);
+											console.error(
+												"Error when making request:",
+												error.message
+											);
 											setRegister(false);
 										}
 									});

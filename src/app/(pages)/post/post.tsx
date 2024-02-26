@@ -12,6 +12,8 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 
 interface PostInfo {
 	id: number;
@@ -25,7 +27,9 @@ export default function BlogPost({ id, title, content, author }: PostInfo) {
 		<div className="group flex flex-col justify-between m-5 w-72 h-80 overflow-y-auto overflow-hidden shadow-3xl border-2 rounded-md">
 			<div className="flex flex-col justify-start items-center">
 				<h1 className="m-3 text-center break-all text-2xl">{title}</h1>
-				<p className="m-5 text-wrap break-all leading-relaxed">{content}</p>
+				<p className="m-5 text-wrap break-all leading-relaxed">
+					{content}
+				</p>
 			</div>
 			<p className="m-5">
 				{sessionStorage.getItem("user")?.toString() === author ? (
@@ -39,18 +43,23 @@ export default function BlogPost({ id, title, content, author }: PostInfo) {
 							</AlertDialogTrigger>
 							<AlertDialogContent>
 								<AlertDialogHeader>
-									<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+									<AlertDialogTitle>
+										Are you absolutely sure?
+									</AlertDialogTitle>
 									<AlertDialogDescription>
-										This action cannot be undone. This will permanently delete your post
-										and remove data from our servers.
+										This action cannot be undone. This will
+										permanently delete your post and remove
+										data from our servers.
 									</AlertDialogDescription>
 								</AlertDialogHeader>
 								<AlertDialogFooter>
-									<AlertDialogCancel>Cancel</AlertDialogCancel>
+									<AlertDialogCancel>
+										Cancel
+									</AlertDialogCancel>
 									<AlertDialogAction
 										onClick={() => {
 											axios
-												.post("api/posts/editpost", {
+												.post("api/posts/delete-post", {
 													id: id,
 													title: title,
 												})
@@ -62,7 +71,10 @@ export default function BlogPost({ id, title, content, author }: PostInfo) {
 												})
 												.catch((error) => {
 													if (error.response) {
-														toast(error.response.data.message);
+														toast(
+															error.response.data
+																.error
+														);
 													}
 												});
 										}}
@@ -72,11 +84,46 @@ export default function BlogPost({ id, title, content, author }: PostInfo) {
 								</AlertDialogFooter>
 							</AlertDialogContent>
 						</AlertDialog>
-						;
-						<Pencil
-							width={15}
-							className="cursor-pointer hover:text-green-500 opacity-0 group-hover:opacity-100 transition-all duration-200"
-						/>
+
+						<AlertDialog>
+							<AlertDialogTrigger>
+								<Pencil
+									width={15}
+									className="cursor-pointer hover:text-green-500 opacity-0 group-hover:opacity-100 transition-all duration-200"
+								/>
+							</AlertDialogTrigger>
+							<AlertDialogContent>
+								<AlertDialogHeader>
+									<div className="flex flex-col justify-center items-center gap-4 shadow-3xl border-2 p-5 rounded-md">
+										<Input
+											defaultValue={title}
+											maxLength={25}
+											onChange={(e) => {
+												//setTitle(e.target.value);
+											}}
+											type="text"
+											placeholder="Title"
+										/>
+										<Textarea
+											defaultValue={content}
+											maxLength={255}
+											onChange={(e) => {
+												//setContent(e.target.value);
+											}}
+											placeholder="Enter your content message here."
+										/>
+									</div>
+								</AlertDialogHeader>
+								<AlertDialogFooter>
+									<AlertDialogCancel>
+										Cancel
+									</AlertDialogCancel>
+									<AlertDialogAction onClick={() => {}}>
+										Submit
+									</AlertDialogAction>
+								</AlertDialogFooter>
+							</AlertDialogContent>
+						</AlertDialog>
 					</div>
 				) : null}
 				by <strong className="text-green-500">{author}</strong>
