@@ -15,6 +15,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
 
 interface PostInfo {
+	id: number;
 	title: string;
 	content: string;
 	author: string;
@@ -111,6 +112,7 @@ export default function Home() {
 				{currentPosts.reverse().map((post, index) => (
 					<div className="flex flex-1" key={index}>
 						<BlogPost
+							id={post.id}
 							title={post.title}
 							content={post.content}
 							author={post.author}

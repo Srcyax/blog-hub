@@ -1,12 +1,26 @@
+import axios from "axios";
 import { Trash2, Pencil } from "lucide-react";
+import { toast } from "sonner";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface PostInfo {
+	id: number;
 	title: string;
 	content: string;
 	author: string;
 }
 
-export default function BlogPost({ title, content, author }: PostInfo) {
+export default function BlogPost({ id, title, content, author }: PostInfo) {
 	return (
 		<div className="group flex flex-col justify-between m-5 w-72 h-80 overflow-y-auto overflow-hidden shadow-3xl border-2 rounded-md">
 			<div className="flex flex-col justify-start items-center">
@@ -16,10 +30,49 @@ export default function BlogPost({ title, content, author }: PostInfo) {
 			<p className="m-5">
 				{sessionStorage.getItem("user")?.toString() === author ? (
 					<div className="flex flex-row gap-2">
-						<Trash2
-							width={15}
-							className="cursor-pointer hover:text-green-500 opacity-0 group-hover:opacity-100 transition-all duration-200"
-						/>
+						<AlertDialog>
+							<AlertDialogTrigger>
+								<Trash2
+									width={15}
+									className="cursor-pointer hover:text-green-500 opacity-0 group-hover:opacity-100 transition-all duration-200"
+								/>
+							</AlertDialogTrigger>
+							<AlertDialogContent>
+								<AlertDialogHeader>
+									<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+									<AlertDialogDescription>
+										This action cannot be undone. This will permanently delete your post
+										and remove data from our servers.
+									</AlertDialogDescription>
+								</AlertDialogHeader>
+								<AlertDialogFooter>
+									<AlertDialogCancel>Cancel</AlertDialogCancel>
+									<AlertDialogAction
+										onClick={() => {
+											axios
+												.post("api/posts/editpost", {
+													id: id,
+													title: title,
+												})
+												.then((res) => {
+													toast(res.data.message);
+													setTimeout(() => {
+														location.reload();
+													}, 1000);
+												})
+												.catch((error) => {
+													if (error.response) {
+														toast(error.response.data.message);
+													}
+												});
+										}}
+									>
+										Continue
+									</AlertDialogAction>
+								</AlertDialogFooter>
+							</AlertDialogContent>
+						</AlertDialog>
+						;
 						<Pencil
 							width={15}
 							className="cursor-pointer hover:text-green-500 opacity-0 group-hover:opacity-100 transition-all duration-200"
