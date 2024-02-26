@@ -13,6 +13,16 @@ export default function Register() {
 	const [register, setRegister] = useState<boolean>();
 	const router = useRouter();
 
+	var specialChars = "<>@!#$%^&*()_+[]{}?:;|'\"\\,./~`-=";
+	var checkForSpecialChar = function (string: string) {
+		for (let i = 0; i < specialChars.length; i++) {
+			if (string.indexOf(specialChars[i]) > -1) {
+				return true;
+			}
+		}
+		return false;
+	};
+
 	return (
 		<main className="flex flex-col justify-center items-center">
 			<h1 className="m-5 text-3xl font-semibold">Register</h1>
@@ -36,6 +46,11 @@ export default function Register() {
 					disabled={register}
 					onClick={() => {
 						if (username !== undefined && password !== undefined) {
+							if (checkForSpecialChar(username)) {
+								toast(`Don't use special characters ${specialChars}`);
+								setRegister(false);
+								return;
+							}
 							setRegister(true);
 							setTimeout(() => {
 								axios
@@ -44,33 +59,22 @@ export default function Register() {
 										password: password,
 									})
 									.then((res) => {
-										localStorage.setItem(
-											"user",
-											res.data.user.username
-										);
+										localStorage.setItem("user", res.data.user.username);
 										router.push("/");
 									})
 									.catch((error) => {
 										if (error.response) {
 											if (error.response.status === 400) {
-												toast(
-													"This user is already registered"
-												);
+												toast("This user is already registered");
 												setRegister(false);
 											} else {
 												toast("Error registering user");
-												console.error(
-													"Error registering user: ",
-													error.message
-												);
+												console.error("Error registering user: ", error.message);
 												setRegister(false);
 											}
 										} else {
 											toast("Error when making requests");
-											console.error(
-												"Error when making request:",
-												error.message
-											);
+											console.error("Error when making request:", error.message);
 											setRegister(false);
 										}
 									});
