@@ -6,6 +6,11 @@ export default async function handler(req, res) {
 
 	switch (method) {
 		case "POST":
+			if (req.body.title.length > 25 || req.body.content.length > 255) {
+				return res.status(500).json({
+					message: "Its content is very extensive",
+				});
+			}
 			const post = await prisma.post.create({
 				data: {
 					title: req.body.title,

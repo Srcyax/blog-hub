@@ -6,6 +6,11 @@ export default async function handler(req, res) {
 
 	switch (method) {
 		case "POST":
+			if (req.body.username.length > 10) {
+				return res.status(500).json({
+					message: "Its content is very extensive",
+				});
+			}
 			try {
 				const user = await prisma.user.create({
 					data: {
