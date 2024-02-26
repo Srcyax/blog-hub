@@ -23,7 +23,7 @@ import { LogOut } from "lucide-react";
 export default function Header() {
 	const [username, setUsername] = useState<string>();
 	const [newUsername, setNewUsername] = useState<string>();
-	const [submit, setSubmit] = useState<boolean>();
+	const [submit, setSubmit] = useState<boolean>(false);
 
 	const router = useRouter();
 
@@ -44,6 +44,12 @@ export default function Header() {
 	const handleEditProfile = () => {
 		if (!newUsername) return;
 
+		if (newUsername?.match(/[^a-zA-Z0-9]/g)) {
+			toast("Special characters are not allowed");
+			setSubmit(false);
+			return;
+		}
+
 		setSubmit(true);
 
 		axios
@@ -60,7 +66,7 @@ export default function Header() {
 				}, 1000);
 			})
 			.catch((error) => {
-				toast(error.response.error);
+				toast(error.response.data.error);
 				setSubmit(false);
 			});
 	};
@@ -75,6 +81,7 @@ export default function Header() {
 			</Link>
 			<section className="flex gap-4">
 				<Button
+					disabled={submit}
 					variant="outline"
 					className="px-5 hover:px-6 py-2 rounded-md shadow-3xl transition-all"
 					onClick={() => {

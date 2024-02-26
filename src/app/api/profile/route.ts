@@ -5,6 +5,14 @@ export async function POST(req: NextRequest) {
 	const body = await req.json();
 
 	const prisma = new PrismaClient();
+
+	if (body.newUsername.length > 10) {
+		return NextResponse.json(
+			{ error: "Its content is very extensive" },
+			{ status: 500 }
+		);
+	}
+
 	try {
 		const user = await prisma.user.findUnique({
 			where: {

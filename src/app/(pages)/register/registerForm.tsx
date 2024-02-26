@@ -20,6 +20,12 @@ export default function RegisterForm() {
 			return;
 		}
 
+		if (password?.match(/[^a-zA-Z0-9]/g)) {
+			toast("Special characters are not allowed");
+			setRegister(false);
+			return;
+		}
+
 		axios
 			.post("/api/register", {
 				username: username,

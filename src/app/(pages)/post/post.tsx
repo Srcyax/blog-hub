@@ -44,10 +44,13 @@ export default function BlogPost({
 				<div className="flex gap-2 items-center">
 					<Avatar className="shadow-xl">
 						<AvatarImage src="" />
-						<AvatarFallback>{author?.charAt(0).toUpperCase()}</AvatarFallback>
+						<AvatarFallback>
+							{author?.charAt(0).toUpperCase()}
+						</AvatarFallback>
 					</Avatar>
 					<strong className="text-green-500">{author}</strong>
-					{parseInt(sessionStorage.getItem("id") as string) === authorId ? (
+					{parseInt(sessionStorage.getItem("id") as string) ===
+					authorId ? (
 						<div className="flex flex-row gap-2 items-center m-1">
 							<DeletePost id={id} />
 							<EditPost id={id} title={title} content={content} />

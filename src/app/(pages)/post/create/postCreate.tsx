@@ -16,17 +16,23 @@ export default function Create() {
 	const [post, setPost] = useState<boolean>();
 
 	const handleCreatePost = () => {
-		toast("Special characters are not allowed");
-		if (title?.match(/[^a-zA-Z0-9]/g) || content?.match(/[^a-zA-Z0-9]/g)) {
-			toast("Special characters are not allowed");
+		const titleFormat = title
+			?.replace(/[^a-zA-Z0-9 ]/g, "")
+			.replace(/\s/g, "");
+		const contentFormat = content
+			?.replace(/[^a-zA-Z0-9 ]/g, "")
+			.replace(/\s/g, "");
+
+		if (!titleFormat || !contentFormat) {
+			toast("Unable to publish this post");
 			setPost(false);
 			return;
 		}
 
 		axios
 			.post("/api/posts", {
-				title: title,
-				content: content,
+				title: titleFormat,
+				content: contentFormat,
 				userId: parseInt(sessionStorage.getItem("id") as string),
 			})
 			.then((res) => {
@@ -67,6 +73,7 @@ export default function Create() {
 				placeholder="Enter your content message here."
 			/>
 			<Button
+				disabled={post}
 				onClick={() => {
 					if (title && content) {
 						setPost(true);

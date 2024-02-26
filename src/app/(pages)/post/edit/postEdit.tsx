@@ -25,19 +25,23 @@ export default function EditPost({ id, title, content }: PostInfo) {
 	const [newContent, setNewContent] = useState<string>();
 
 	const handleEdit = () => {
-		if (
-			newTitle?.match(/[^a-zA-Z0-9]/g) ||
-			newContent?.match(/[^a-zA-Z0-9]/g)
-		) {
-			toast("Special characters are not allowed");
+		const newTitleFormat = newTitle
+			?.replace(/[^a-zA-Z0-9 ]/g, "")
+			.replace(/\s/g, "");
+		const newContentFormat = newContent
+			?.replace(/[^a-zA-Z0-9 ]/g, "")
+			.replace(/\s/g, "");
+
+		if (!newTitleFormat || !newContentFormat) {
+			toast("Unable to edit this post");
 			return;
 		}
 
 		axios
 			.post("/api/posts/edit-post", {
 				id: id,
-				newTitle: newTitle,
-				newContent: newContent,
+				newTitle: newTitleFormat,
+				newContent: newContentFormat,
 			})
 			.then((res) => {
 				toast(res.data.message);
