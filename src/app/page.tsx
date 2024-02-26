@@ -77,32 +77,34 @@ export default function Home() {
 			<h1 className="m-5 text-3xl font-semibold">Blogs</h1>
 
 			<div className="m-5">
-				<Pagination>
-					<PaginationContent>
-						<PaginationItem>
-							<PaginationPrevious
-								className="cursor-pointer"
-								onClick={() => {
-									if (currentPage === 1) return;
-									prevPage();
-								}}
-							/>
-						</PaginationItem>
-						{renderPageNumbers()}
-						<PaginationItem>
-							<PaginationEllipsis />
-						</PaginationItem>
-						<PaginationItem>
-							<PaginationNext
-								className="cursor-pointer"
-								onClick={() => {
-									if (currentPage === totalPages) return;
-									nextPage();
-								}}
-							/>
-						</PaginationItem>
-					</PaginationContent>
-				</Pagination>
+				{totalPages > 1 ? (
+					<Pagination>
+						<PaginationContent>
+							<PaginationItem>
+								<PaginationPrevious
+									className="cursor-pointer"
+									onClick={() => {
+										if (currentPage === 1) return;
+										prevPage();
+									}}
+								/>
+							</PaginationItem>
+							{renderPageNumbers()}
+							<PaginationItem>
+								<PaginationEllipsis />
+							</PaginationItem>
+							<PaginationItem>
+								<PaginationNext
+									className="cursor-pointer"
+									onClick={() => {
+										if (currentPage === totalPages) return;
+										nextPage();
+									}}
+								/>
+							</PaginationItem>
+						</PaginationContent>
+					</Pagination>
+				) : null}
 			</div>
 			{!isPostsLoaded ? (
 				<div className="grid desktop:grid-cols-4 smartphone:grid-cols-1 tablet:grid-cols-2 laptop:grid-cols-3 gap-10 overflow-y-auto">
