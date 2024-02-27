@@ -37,7 +37,7 @@ export default function BlogPost({
 	authorId,
 }: PostInfo) {
 	return (
-		<div className="group flex flex-col justify-between m-5 w-72 h-80 overflow-y-auto overflow-hidden shadow-3xl border-2 rounded-md">
+		<div className="group flex flex-col justify-between m-5 w-72 h-80 overflow-y-auto overflow-hidden shadow-3xl border-2 rounded-md hover:border-green-500 transition-colors duration-150">
 			<Content title={title} content={content} />
 
 			<p className="m-5">
