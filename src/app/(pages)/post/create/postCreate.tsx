@@ -16,15 +16,23 @@ export default function Create() {
 	const [post, setPost] = useState<boolean>();
 
 	const handleCreatePost = () => {
-		const titleFormat = title
-			?.replace(/[^a-zA-Z0-9 ]/g, "")
-			.replace(/\s/g, "");
-		const contentFormat = content
-			?.replace(/[^a-zA-Z0-9 ]/g, "")
-			.replace(/\s/g, "");
+		const titleFormat = title?.replace(/[^a-zA-Z0-9 ]/g, "");
+		const contentFormat = content?.replace(/[^a-zA-Z0-9 ]/g, "");
 
 		if (!titleFormat || !contentFormat) {
-			toast("Unable to publish this post");
+			toast("Special characters are not allowed");
+			setPost(false);
+			return;
+		}
+
+		if (!title?.trim()) {
+			toast("The title is invalid");
+			setPost(false);
+			return;
+		}
+
+		if (!content?.trim()) {
+			toast("The content is invalid");
 			setPost(false);
 			return;
 		}
@@ -41,12 +49,7 @@ export default function Create() {
 			.catch((error) => {
 				if (error.response) {
 					if (error.response.status) {
-						toast(
-							"(" +
-								error.response.status +
-								") " +
-								error.response.data.error
-						);
+						toast("(" + error.response.status + ") " + error.response.data.error);
 						setPost(false);
 					} else {
 						toast("Unable to publish this post");

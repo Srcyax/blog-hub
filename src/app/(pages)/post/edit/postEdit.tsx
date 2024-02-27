@@ -21,27 +21,33 @@ interface PostInfo {
 }
 
 export default function EditPost({ id, title, content }: PostInfo) {
-	const [newTitle, setNewTitle] = useState<string>();
-	const [newContent, setNewContent] = useState<string>();
+	const [newTitle, setNewTitle] = useState<string>(title);
+	const [newContent, setNewContent] = useState<string>(content);
 
 	const handleEdit = () => {
-		const newTitleFormat = newTitle
-			?.replace(/[^a-zA-Z0-9 ]/g, "")
-			.replace(/\s/g, "");
-		const newContentFormat = newContent
-			?.replace(/[^a-zA-Z0-9 ]/g, "")
-			.replace(/\s/g, "");
+		const titleFormat = newTitle?.replace(/[^a-zA-Z0-9 ]/g, "");
+		const contentFormat = newContent?.replace(/[^a-zA-Z0-9 ]/g, "");
 
-		if (!newTitleFormat || !newContentFormat) {
-			toast("Unable to edit this post");
+		if (!titleFormat || !contentFormat) {
+			toast("Special characters are not allowed");
+			return;
+		}
+
+		if (!title?.trim()) {
+			toast("The title is invalid");
+			return;
+		}
+
+		if (!content?.trim()) {
+			toast("The content is invalid");
 			return;
 		}
 
 		axios
 			.post("/api/posts/edit-post", {
 				id: id,
-				newTitle: newTitleFormat,
-				newContent: newContentFormat,
+				newTitle: titleFormat,
+				newContent: contentFormat,
 			})
 			.then((res) => {
 				toast(res.data.message);
@@ -86,9 +92,7 @@ export default function EditPost({ id, title, content }: PostInfo) {
 				</AlertDialogHeader>
 				<AlertDialogFooter>
 					<AlertDialogCancel>Cancel</AlertDialogCancel>
-					<AlertDialogAction onClick={handleEdit}>
-						Submit
-					</AlertDialogAction>
+					<AlertDialogAction onClick={handleEdit}>Submit</AlertDialogAction>
 				</AlertDialogFooter>
 			</AlertDialogContent>
 		</AlertDialog>
