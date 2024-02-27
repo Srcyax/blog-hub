@@ -33,7 +33,7 @@ export default function LoginForm() {
 			})
 			.then((res) => {
 				sessionStorage.setItem("id", res.data.user.id);
-				router.push("/");
+				router.push("/hub");
 			})
 			.catch((error) => {
 				if (error.response) {

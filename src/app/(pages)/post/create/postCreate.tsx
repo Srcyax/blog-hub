@@ -44,12 +44,17 @@ export default function Create() {
 				userId: parseInt(sessionStorage.getItem("id") as string),
 			})
 			.then((res) => {
-				router.push("/");
+				router.push("/hub");
 			})
 			.catch((error) => {
 				if (error.response) {
 					if (error.response.status) {
-						toast("(" + error.response.status + ") " + error.response.data.error);
+						toast(
+							"(" +
+								error.response.status +
+								") " +
+								error.response.data.error
+						);
 						setPost(false);
 					} else {
 						toast("Unable to publish this post");
