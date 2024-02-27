@@ -13,6 +13,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
 import BlogPost from "../post/post";
+import Header from "@/app/header";
 
 interface PostInfo {
 	id: number;
@@ -75,57 +76,61 @@ export default function Hub() {
 	};
 
 	return (
-		<main className="flex h-full w-full flex-col items-center justify-center">
-			<h1 className="m-5 text-3xl font-semibold">Blogs</h1>
+		<div>
+			<Header />
+			<main className="flex h-full w-full flex-col items-center justify-center">
+				<h1 className="m-5 text-3xl font-semibold">Blogs</h1>
 
-			<div className="m-5">
-				{totalPages > 1 ? (
-					<Pagination>
-						<PaginationContent>
-							<PaginationItem>
-								<PaginationPrevious
-									className="cursor-pointer"
-									onClick={() => {
-										if (currentPage === 1) return;
-										prevPage();
-									}}
-								/>
-							</PaginationItem>
-							{renderPageNumbers()}
-							<PaginationItem>
-								<PaginationEllipsis />
-							</PaginationItem>
-							<PaginationItem>
-								<PaginationNext
-									className="cursor-pointer"
-									onClick={() => {
-										if (currentPage === totalPages) return;
-										nextPage();
-									}}
-								/>
-							</PaginationItem>
-						</PaginationContent>
-					</Pagination>
-				) : null}
-			</div>
-			{!isPostsLoaded ? (
-				<div className="grid desktop:grid-cols-4 smartphone:grid-cols-1 tablet:grid-cols-2 laptop:grid-cols-3 gap-10 overflow-y-auto">
-					<Skeleton className="h-[305px] w-[250px] rounded-xl shadow-3xl" />
+				<div className="m-5">
+					{totalPages > 1 ? (
+						<Pagination>
+							<PaginationContent>
+								<PaginationItem>
+									<PaginationPrevious
+										className="cursor-pointer"
+										onClick={() => {
+											if (currentPage === 1) return;
+											prevPage();
+										}}
+									/>
+								</PaginationItem>
+								{renderPageNumbers()}
+								<PaginationItem>
+									<PaginationEllipsis />
+								</PaginationItem>
+								<PaginationItem>
+									<PaginationNext
+										className="cursor-pointer"
+										onClick={() => {
+											if (currentPage === totalPages)
+												return;
+											nextPage();
+										}}
+									/>
+								</PaginationItem>
+							</PaginationContent>
+						</Pagination>
+					) : null}
 				</div>
-			) : null}
-			<div className="grid desktop:grid-cols-4 smartphone:grid-cols-1 tablet:grid-cols-2 laptop:grid-cols-3 gap-10 overflow-y-auto">
-				{currentPosts.reverse().map((post, index) => (
-					<div className="flex flex-1" key={index}>
-						<BlogPost
-							id={post.id}
-							title={post.title}
-							content={post.content}
-							author={post.author}
-							authorId={post.authorId}
-						/>
+				{!isPostsLoaded ? (
+					<div className="grid desktop:grid-cols-4 smartphone:grid-cols-1 tablet:grid-cols-2 laptop:grid-cols-3 gap-10 overflow-y-auto">
+						<Skeleton className="h-[305px] w-[250px] rounded-xl shadow-3xl" />
 					</div>
-				))}
-			</div>
-		</main>
+				) : null}
+				<div className="grid desktop:grid-cols-4 smartphone:grid-cols-1 tablet:grid-cols-2 laptop:grid-cols-3 gap-10 overflow-y-auto">
+					{currentPosts.reverse().map((post, index) => (
+						<div className="flex flex-1" key={index}>
+							<BlogPost
+								id={post.id}
+								title={post.title}
+								content={post.content}
+								author={post.author}
+								authorId={post.authorId}
+							/>
+						</div>
+					))}
+				</div>
+			</main>
+		</div>
 	);
 }
