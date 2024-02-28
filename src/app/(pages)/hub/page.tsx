@@ -35,7 +35,6 @@ export default function Hub() {
 	useEffect(() => {
 		axios.get("api/posts").then((res) => {
 			setPosts(res.data.posts);
-			//console.log(res.data.posts);
 			setPostsLoaded(true);
 		});
 	}, []);
@@ -66,9 +65,7 @@ export default function Hub() {
 		for (let i = 1; i <= totalPages; i++) {
 			pageNumbers.push(
 				<PaginationItem key={i}>
-					<PaginationLink onClick={() => goToPage(i)}>
-						{i}
-					</PaginationLink>
+					<PaginationLink onClick={() => goToPage(i)}>{i}</PaginationLink>
 				</PaginationItem>
 			);
 		}
@@ -102,8 +99,7 @@ export default function Hub() {
 									<PaginationNext
 										className="cursor-pointer"
 										onClick={() => {
-											if (currentPage === totalPages)
-												return;
+											if (currentPage === totalPages) return;
 											nextPage();
 										}}
 									/>

@@ -13,6 +13,7 @@ import {
 import { Trash2 } from "lucide-react";
 import axios from "axios";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
 interface PostInfo {
 	id: number;
@@ -26,7 +27,6 @@ export default function DeletePost({ id }: PostInfo) {
 				userId: parseInt(sessionStorage.getItem("id") as string),
 			})
 			.then((res) => {
-				toast(res.data.message);
 				setTimeout(() => {
 					location.reload();
 				}, 300);
@@ -53,8 +53,12 @@ export default function DeletePost({ id }: PostInfo) {
 					</AlertDialogDescription>
 				</AlertDialogHeader>
 				<AlertDialogFooter>
-					<AlertDialogCancel>Cancel</AlertDialogCancel>
-					<AlertDialogAction onClick={handleDelete}>Continue</AlertDialogAction>
+					<form onSubmit={handleDelete} action="">
+						<div className="flex flex-col gap-2 items-center">
+							<AlertDialogCancel className="px-44">Cancel</AlertDialogCancel>
+							<Button className="px-44">Continue</Button>
+						</div>
+					</form>
 				</AlertDialogFooter>
 			</AlertDialogContent>
 		</AlertDialog>

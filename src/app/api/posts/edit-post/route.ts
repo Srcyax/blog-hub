@@ -1,13 +1,39 @@
 import { PrismaClient } from "@prisma/client";
-import { AwardIcon } from "lucide-react";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
 	const body = await req.json();
-
+	const { title, content } = body;
 	const prisma = new PrismaClient();
 
-	if (body.newTitle.length > 25 || body.newContent.length > 255) {
+	if (
+		!title?.replace(/[^a-zA-Z0-9 ]/g, "") ||
+		!content?.replace(/[^a-zA-Z0-9 ]/g, "")
+	) {
+		return NextResponse.json(
+			{ error: "Special characters are not allowed" },
+			{ status: 500 }
+		);
+	}
+
+	if (!title.trim()) {
+		return NextResponse.json({ error: "The title is invalid" }, { status: 500 });
+	}
+
+	if (!content.trim()) {
+		return NextResponse.json(
+			{ error: "The content is invalid" },
+			{ status: 500 }
+		);
+	}
+
+	if (title.length > 25) {
+		return NextResponse.json(
+			{ error: "Its title is very extensive" },
+			{ status: 500 }
+		);
+	}
+	if (content.length > 255) {
 		return NextResponse.json(
 			{ error: "Its content is very extensive" },
 			{ status: 500 }
@@ -20,8 +46,8 @@ export async function POST(req: NextRequest) {
 				id: body.id,
 			},
 			data: {
-				title: body.newTitle,
-				content: body.newContent,
+				title: title,
+				content: content,
 			},
 		});
 

@@ -1,64 +1,51 @@
 import {
 	AlertDialog,
-	AlertDialogAction,
 	AlertDialogCancel,
 	AlertDialogContent,
-	AlertDialogFooter,
 	AlertDialogHeader,
 	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Loading } from "@/components/ui/loading";
 import { Textarea } from "@/components/ui/textarea";
 import axios from "axios";
 import { Pencil } from "lucide-react";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-interface PostInfo {
+type PostInfo = {
 	id: number;
 	title: string;
 	content: string;
-}
+};
 
-export default function EditPost({ id, title, content }: PostInfo) {
-	const [newTitle, setNewTitle] = useState<string>(title);
-	const [newContent, setNewContent] = useState<string>(content);
+export default function EditPost(info: PostInfo) {
+	const { handleSubmit, register } = useForm();
+	const [edited, setEdited] = useState<boolean>(false);
 
-	const handleEdit = () => {
-		const titleFormat = newTitle?.replace(/[^a-zA-Z0-9 ]/g, "");
-		const contentFormat = newContent?.replace(/[^a-zA-Z0-9 ]/g, "");
-
-		if (!titleFormat || !contentFormat) {
-			toast("Special characters are not allowed");
-			return;
-		}
-
-		if (!title?.trim()) {
-			toast("The title is invalid");
-			return;
-		}
-
-		if (!content?.trim()) {
-			toast("The content is invalid");
-			return;
-		}
-
+	function onSubmit(data: any) {
+		setEdited(true);
+		console.log(data);
 		axios
 			.post("/api/posts/edit-post", {
-				id: id,
-				newTitle: titleFormat,
-				newContent: contentFormat,
+				id: info.id,
+				title: data.title,
+				content: data.content,
 			})
 			.then((res) => {
 				toast(res.data.message);
+				setEdited(false);
 				setTimeout(() => {
 					location.reload();
 				}, 1000);
 			})
 			.catch((error) => {
-				toast(error.response.error);
+				toast(error.response.data.error);
+				setEdited(false);
 			});
-	};
+	}
 
 	return (
 		<AlertDialog>
@@ -70,30 +57,33 @@ export default function EditPost({ id, title, content }: PostInfo) {
 			</AlertDialogTrigger>
 			<AlertDialogContent>
 				<AlertDialogHeader>
-					<div className="flex flex-col justify-center items-center gap-4 shadow-3xl border-2 p-5 rounded-md">
-						<Input
-							defaultValue={title}
-							maxLength={25}
-							onChange={(e) => {
-								setNewTitle(e.target.value);
-							}}
-							type="text"
-							placeholder="Title"
-						/>
-						<Textarea
-							defaultValue={content}
-							maxLength={255}
-							onChange={(e) => {
-								setNewContent(e.target.value);
-							}}
-							placeholder="Enter your content message here."
-						/>
-					</div>
+					<form onSubmit={handleSubmit(onSubmit)}>
+						<div className="flex flex-col justify-center items-center gap-4 p-5 rounded-md">
+							<Input
+								{...register("title")}
+								defaultValue={info.title}
+								maxLength={25}
+								type="text"
+								placeholder="Title"
+							/>
+							<Textarea
+								{...register("content")}
+								defaultValue={info.content}
+								maxLength={255}
+								placeholder="Enter your content message here."
+							/>
+							<div className="flex flex-col gap-2 items-center">
+								<Button disabled={edited} className="px-44" type="submit">
+									Submit
+								</Button>
+								<AlertDialogCancel disabled={edited} className="px-44">
+									Cancel
+								</AlertDialogCancel>
+								{edited ? <Loading /> : null}
+							</div>
+						</div>
+					</form>
 				</AlertDialogHeader>
-				<AlertDialogFooter>
-					<AlertDialogCancel>Cancel</AlertDialogCancel>
-					<AlertDialogAction onClick={handleEdit}>Submit</AlertDialogAction>
-				</AlertDialogFooter>
 			</AlertDialogContent>
 		</AlertDialog>
 	);
