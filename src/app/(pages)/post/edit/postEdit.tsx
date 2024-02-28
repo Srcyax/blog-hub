@@ -11,7 +11,7 @@ import { Loading } from "@/components/ui/loading";
 import { Textarea } from "@/components/ui/textarea";
 import axios from "axios";
 import { Pencil } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -73,10 +73,17 @@ export default function EditPost(info: PostInfo) {
 								placeholder="Enter your content message here."
 							/>
 							<div className="flex flex-col gap-2 items-center">
-								<Button disabled={edited} className="px-44" type="submit">
+								<Button
+									disabled={edited}
+									className="px-44"
+									type="submit"
+								>
 									Submit
 								</Button>
-								<AlertDialogCancel disabled={edited} className="px-44">
+								<AlertDialogCancel
+									disabled={edited}
+									className="px-44"
+								>
 									Cancel
 								</AlertDialogCancel>
 								{edited ? <Loading /> : null}

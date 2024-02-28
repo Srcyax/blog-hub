@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Content from "./postContent";
 import DeletePost from "./delete/postDelete";
 import EditPost from "./edit/postEdit";
@@ -36,6 +36,17 @@ export default function BlogPost({
 	author,
 	authorId,
 }: PostInfo) {
+	const [authorized, setAuth] = useState<boolean>(false);
+	useEffect(() => {
+		axios
+			.post("/api/posts/edit-post/auth", {
+				authorId: authorId,
+			})
+			.then((res) => {
+				setAuth(res.data);
+			});
+	});
+
 	return (
 		<div className="group flex flex-col justify-between m-5 w-72 h-80 overflow-y-auto overflow-hidden shadow-3xl border-2 rounded-md hover:border-green-500 transition-colors duration-150">
 			<Content title={title} content={content} />
@@ -49,8 +60,7 @@ export default function BlogPost({
 						</AvatarFallback>
 					</Avatar>
 					<strong className="text-green-500">{author}</strong>
-					{parseInt(sessionStorage.getItem("id") as string) ===
-					authorId ? (
+					{authorized ? (
 						<div className="flex flex-row gap-2 items-center m-1">
 							<DeletePost id={id} />
 							<EditPost id={id} title={title} content={content} />

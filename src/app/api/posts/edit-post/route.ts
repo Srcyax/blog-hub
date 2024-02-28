@@ -1,5 +1,7 @@
 import { PrismaClient } from "@prisma/client";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import JWT, { JwtPayload } from "jsonwebtoken";
 
 export async function POST(req: NextRequest) {
 	const body = await req.json();
@@ -17,7 +19,10 @@ export async function POST(req: NextRequest) {
 	}
 
 	if (!title.trim()) {
-		return NextResponse.json({ error: "The title is invalid" }, { status: 500 });
+		return NextResponse.json(
+			{ error: "The title is invalid" },
+			{ status: 500 }
+		);
 	}
 
 	if (!content.trim()) {
