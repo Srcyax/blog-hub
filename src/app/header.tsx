@@ -19,30 +19,26 @@ import { Input } from "@/components/ui/input";
 import axios from "axios";
 import { toast } from "sonner";
 import { LogOut } from "lucide-react";
-import { useForm } from "react-hook-form";
 import { handleEditProfile } from "./(pages)/hub/profile/updateProfile";
+import { Loading } from "@/components/ui/loading";
 
 export default function Header() {
 	const [username, setUsername] = useState<string>();
 	const [submit, setSubmit] = useState<boolean>(false);
-	const [getUser, setGetUser] = useState<boolean>(false);
+	const [getUser, setGetUser] = useState<boolean>(true);
 	const [newUsername, setNewUsername] = useState<string>();
 
 	const router = useRouter();
 
 	useEffect(() => {
-		if (sessionStorage.getItem("id")) {
-			setGetUser(true);
+		if (getUser) {
 			axios
-				.post("/api/profile/getusername", {
-					userId: parseInt(sessionStorage.getItem("id") as string),
-				})
+				.post("/api/profile/getusername")
 				.then((res) => {
 					setUsername(res.data.user.username);
 					setGetUser(false);
 				})
 				.catch((error) => {
-					toast(`${error.status} ${error}`);
 					setGetUser(false);
 				});
 		}
@@ -85,7 +81,9 @@ export default function Header() {
 						<SheetTrigger className="hover:opacity-70 transition-all">
 							<Avatar className="shadow-xl">
 								<AvatarImage src="" />
-								<AvatarFallback>{username?.charAt(0).toUpperCase()}</AvatarFallback>
+								<AvatarFallback>
+									{username?.charAt(0).toUpperCase()}
+								</AvatarFallback>
 							</Avatar>
 						</SheetTrigger>
 						<SheetContent className="w-[400px] sm:w-[540px]">
@@ -112,7 +110,9 @@ export default function Header() {
 									<Button
 										onClick={() => {
 											setSubmit(true);
-											handleEditProfile(newUsername as string).then(() => {
+											handleEditProfile(
+												newUsername as string
+											).then(() => {
 												setSubmit(false);
 											});
 										}}
@@ -125,8 +125,9 @@ export default function Header() {
 									<Button
 										className="flex gap-3"
 										onClick={() => {
-											sessionStorage.clear();
-											location.reload();
+											axios.get("api/logout").then(() => {
+												location.reload();
+											});
 										}}
 									>
 										Log out <LogOut />

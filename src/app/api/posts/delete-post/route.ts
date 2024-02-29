@@ -1,10 +1,16 @@
 import { PrismaClient } from "@prisma/client";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import JWT, { JwtPayload } from "jsonwebtoken";
 
 export async function POST(req: NextRequest) {
 	const body = await req.json();
 
 	const prisma = new PrismaClient();
+
+	const hasToken = cookies().has("acess_token");
+
+	if (!hasToken) return NextResponse.json({ error: "User not allowed" });
 
 	try {
 		const post = await prisma.post.findUnique({
@@ -14,10 +20,16 @@ export async function POST(req: NextRequest) {
 		});
 
 		if (!post) {
-			return NextResponse.json({ error: "Post not found" }, { status: 404 });
+			return NextResponse.json(
+				{ error: "Post not found" },
+				{ status: 404 }
+			);
 		}
 
-		if (post.authorId !== body.userId) {
+		const token = cookies().get("acess_token")?.value as string;
+		var user = JWT.decode(token) as JwtPayload;
+
+		if (post.authorId !== user.id) {
 			return NextResponse.json(
 				{ error: "You do not have permission to delete this post." },
 				{ status: 403 }

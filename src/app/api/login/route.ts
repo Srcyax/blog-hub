@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
 
 		const acessToken = JWT.sign(
 			{ username: user.username, id: user.id },
-			"de46ecc96f271479dc9f6f486a2494e308ff4d8a16eddf2dc8007286cbcb7aa5"
+			process.env.JWT_SECRET as string
 		);
 
 		cookies().set("acess_token", acessToken, {

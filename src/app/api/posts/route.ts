@@ -1,11 +1,17 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import JWT, { JwtPayload } from "jsonwebtoken";
 
 export async function POST(req: NextRequest) {
 	const body = await req.json();
 	const { title, content } = body;
 	const prisma = new PrismaClient();
+
+	const hasToken = cookies().has("acess_token");
+
+	if (!hasToken) return NextResponse.json({ error: "User not allowed" });
 
 	if (
 		!title?.replace(/[^a-zA-Z0-9 ]/g, "") ||
@@ -18,7 +24,10 @@ export async function POST(req: NextRequest) {
 	}
 
 	if (!title.trim()) {
-		return NextResponse.json({ error: "The title is invalid" }, { status: 500 });
+		return NextResponse.json(
+			{ error: "The title is invalid" },
+			{ status: 500 }
+		);
 	}
 
 	if (!content.trim()) {
@@ -42,15 +51,8 @@ export async function POST(req: NextRequest) {
 	}
 
 	try {
-		const user = await prisma.user.findUnique({
-			where: {
-				id: body.userId,
-			},
-		});
-
-		if (!user) {
-			return NextResponse.json({ error: "User not found" }, { status: 404 });
-		}
+		const token = cookies().get("acess_token")?.value as string;
+		var user = JWT.decode(token) as JwtPayload;
 
 		const post = await prisma.post.create({
 			data: {
@@ -63,7 +65,10 @@ export async function POST(req: NextRequest) {
 		return NextResponse.json({ message: "Sucess", post }, { status: 200 });
 	} catch (err) {
 		console.log(err);
-		if (err instanceof PrismaClientKnownRequestError && err.code === "P2002") {
+		if (
+			err instanceof PrismaClientKnownRequestError &&
+			err.code === "P2002"
+		) {
 			return NextResponse.json(
 				{ error: "This title is already posted" },
 				{ status: 403 }

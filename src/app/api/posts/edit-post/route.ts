@@ -8,6 +8,10 @@ export async function POST(req: NextRequest) {
 	const { title, content } = body;
 	const prisma = new PrismaClient();
 
+	const hasToken = cookies().has("acess_token");
+
+	if (!hasToken) return NextResponse.json({ error: "User not allowed" });
+
 	if (
 		!title?.replace(/[^a-zA-Z0-9 ]/g, "") ||
 		!content?.replace(/[^a-zA-Z0-9 ]/g, "")

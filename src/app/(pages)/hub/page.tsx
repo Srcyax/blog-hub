@@ -47,17 +47,17 @@ export default function Hub() {
 
 	const nextPage = () => {
 		setCurrentPage(currentPage + 1);
-		router.push(`/?page=${currentPage + 1}`);
+		router.push(`hub/?page=${currentPage + 1}`);
 	};
 
 	const prevPage = () => {
 		setCurrentPage(currentPage - 1);
-		router.push(`/?page=${currentPage - 1}`);
+		router.push(`hub/?page=${currentPage - 1}`);
 	};
 
 	const goToPage = (page: number) => {
 		setCurrentPage(page);
-		router.push(`/?page=${page}`);
+		router.push(`hub/?page=${page}`);
 	};
 
 	const renderPageNumbers = () => {
@@ -65,7 +65,9 @@ export default function Hub() {
 		for (let i = 1; i <= totalPages; i++) {
 			pageNumbers.push(
 				<PaginationItem key={i}>
-					<PaginationLink onClick={() => goToPage(i)}>{i}</PaginationLink>
+					<PaginationLink onClick={() => goToPage(i)}>
+						{i}
+					</PaginationLink>
 				</PaginationItem>
 			);
 		}
@@ -99,7 +101,8 @@ export default function Hub() {
 									<PaginationNext
 										className="cursor-pointer"
 										onClick={() => {
-											if (currentPage === totalPages) return;
+											if (currentPage === totalPages)
+												return;
 											nextPage();
 										}}
 									/>

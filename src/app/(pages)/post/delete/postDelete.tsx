@@ -24,7 +24,6 @@ export default function DeletePost({ id }: PostInfo) {
 		axios
 			.post("api/posts/delete-post", {
 				id: id,
-				userId: parseInt(sessionStorage.getItem("id") as string),
 			})
 			.then((res) => {
 				setTimeout(() => {
@@ -46,16 +45,20 @@ export default function DeletePost({ id }: PostInfo) {
 			</AlertDialogTrigger>
 			<AlertDialogContent>
 				<AlertDialogHeader>
-					<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+					<AlertDialogTitle>
+						Are you absolutely sure?
+					</AlertDialogTitle>
 					<AlertDialogDescription>
-						This action cannot be undone. This will permanently delete your post and
-						remove data from our servers.
+						This action cannot be undone. This will permanently
+						delete your post and remove data from our servers.
 					</AlertDialogDescription>
 				</AlertDialogHeader>
 				<AlertDialogFooter>
 					<form onSubmit={handleDelete} action="">
 						<div className="flex flex-col gap-2 items-center">
-							<AlertDialogCancel className="px-44">Cancel</AlertDialogCancel>
+							<AlertDialogCancel className="px-44">
+								Cancel
+							</AlertDialogCancel>
 							<Button className="px-44">Continue</Button>
 						</div>
 					</form>
