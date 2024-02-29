@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
 	var hasToken = cookies().has("acess_token");
 
 	if (!hasToken) {
-		return false;
+		return NextResponse.json(null);
 	}
 
 	try {
@@ -27,9 +27,9 @@ export async function POST(req: NextRequest) {
 			return NextResponse.json({ error: "User not allowed" }, { status: 401 });
 		}
 
-		const { username } = userInfo;
+		const { password, ...user } = userInfo;
 
-		return NextResponse.json({ username }, { status: 200 });
+		return NextResponse.json({ user }, { status: 200 });
 	} catch (err) {
 		console.log(err);
 		return NextResponse.json({ error: err }, { status: 500 });
