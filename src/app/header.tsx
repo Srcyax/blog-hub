@@ -53,20 +53,23 @@ export default function Header() {
 				</h1>
 			</Link>
 			<section className="flex gap-4">
-				<Button
-					disabled={submit}
-					variant="outline"
-					className="px-5 hover:px-6 py-2 rounded-md shadow-3xl transition-all"
-					onClick={() => {
-						if (sessionStorage.getItem("id")) {
-							router.push("/post");
-						} else {
-							router.push("/login");
-						}
-					}}
-				>
-					Publish
-				</Button>
+				{username ? (
+					<Button
+						disabled={submit}
+						variant="outline"
+						className="px-5 hover:px-6 py-2 rounded-md shadow-3xl transition-all"
+						onClick={() => {
+							if (sessionStorage.getItem("id")) {
+								router.push("/post");
+							} else {
+								router.push("/login");
+							}
+						}}
+					>
+						Publish
+					</Button>
+				) : null}
+
 				{!username && !getUser ? (
 					<Button
 						className="px-5 hover:px-6 py-2 rounded-md shadow-3xl transition-all"
