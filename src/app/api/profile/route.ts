@@ -1,35 +1,30 @@
 import { PrismaClient } from "@prisma/client";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import JWT, { JwtPayload } from "jsonwebtoken";
 
 export async function POST(req: NextRequest) {
 	const body = await req.json();
 
 	const prisma = new PrismaClient();
 
-	if (body.newUsername.length > 10) {
-		return NextResponse.json(
-			{ error: "Its content is very extensive" },
-			{ status: 500 }
-		);
+	var hasToken = cookies().has("acess_token");
+
+	if (!hasToken) {
+		return NextResponse.json({ error: "Not authorized" }, { status: 401 });
 	}
 
-	try {
-		const user = await prisma.user.findUnique({
-			where: {
-				id: body.userId,
-			},
-		});
+	const token = cookies().get("acess_token")?.value;
 
-		if (user?.username === body.newUsername) {
-			return NextResponse.json(
-				{ message: "The username cannot be the same" },
-				{ status: 500 }
-			);
-		}
+	try {
+		const user = JWT.verify(
+			token as string,
+			process.env.JWT_SECRET as string
+		) as JwtPayload;
 
 		const profile = await prisma.user.update({
 			where: {
-				id: body.userId,
+				id: user.id,
 			},
 			data: {
 				username: body.newUsername,

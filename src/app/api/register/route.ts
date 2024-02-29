@@ -1,48 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
-
+import bcrypt from "bcrypt";
 import { PrismaClient } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import JWT from "jsonwebtoken";
-import { cookies } from "next/headers";
 
 export async function POST(req: NextRequest) {
 	const body = await req.json();
 
 	const prisma = new PrismaClient();
 
-	if (body.username.length > 10) {
-		return NextResponse.json(
-			{ error: "Its content is very extensive" },
-			{ status: 500 }
-		);
-	}
-
-	var token = cookies().has("acess_token");
-
-	if (token) {
-		cookies().delete("acess_token");
-	}
-
 	try {
+		const passwordHash = await bcrypt.hash(body.password, 10);
+
 		const user = await prisma.user.create({
 			data: {
 				username: body.username,
-				password: body.password,
+				password: passwordHash as string,
 			},
 		});
 
-		const acessToken = JWT.sign(
-			{ username: user.username, id: user.id },
-			process.env.JWT_SECRET as string
-		);
+		const { password, ...userData } = user;
 
-		cookies().set("acess_token", acessToken, {
-			maxAge: 60 * 60 * 24 * 30 * 1000,
-			secure: false,
-			httpOnly: false,
-		});
-
-		return NextResponse.json({ user }, { status: 200 });
+		return NextResponse.json({ userData }, { status: 200 });
 	} catch (err) {
 		if (
 			err instanceof PrismaClientKnownRequestError &&

@@ -22,13 +22,17 @@ export default function LoginForm() {
 				password: data.password,
 			})
 			.then((res) => {
-				sessionStorage.setItem("id", res.data.user.id);
 				router.push("/hub");
 			})
 			.catch((error) => {
 				if (error.response) {
 					if (error.response.status) {
-						toast("(" + error.response.status + ") " + error.response.data.error);
+						toast(
+							"(" +
+								error.response.status +
+								") " +
+								error.response.data.error
+						);
 						setLogin(false);
 					}
 				} else {

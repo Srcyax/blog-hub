@@ -59,11 +59,7 @@ export default function Header() {
 						variant="outline"
 						className="px-5 hover:px-6 py-2 rounded-md shadow-3xl transition-all"
 						onClick={() => {
-							if (sessionStorage.getItem("id")) {
-								router.push("/post");
-							} else {
-								router.push("/login");
-							}
+							router.push("/post");
 						}}
 					>
 						Publish

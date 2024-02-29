@@ -22,13 +22,17 @@ export default function RegisterForm() {
 				password: data.password,
 			})
 			.then((res) => {
-				sessionStorage.setItem("id", res.data.user.id);
-				router.push("/hub");
+				router.push("/login");
 			})
 			.catch((error) => {
 				if (error.response) {
 					if (error.response.status) {
-						toast("(" + error.response.status + ") " + error.response.data.error);
+						toast(
+							"(" +
+								error.response.status +
+								") " +
+								error.response.data.error
+						);
 						setRegister(false);
 					}
 				} else {

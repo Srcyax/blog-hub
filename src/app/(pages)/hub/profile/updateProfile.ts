@@ -6,11 +6,9 @@ export async function handleEditProfile(newUsername: string) {
 
 	await axios
 		.post("/api/profile", {
-			userId: parseInt(sessionStorage.getItem("id") as string),
 			newUsername: newUsername,
 		})
 		.then((res) => {
-			console.log(res.data);
 			toast(res.data.message);
 			setTimeout(() => {
 				location.reload();
