@@ -8,6 +8,43 @@ export async function POST(req: NextRequest) {
 
 	const prisma = new PrismaClient();
 
+	if (
+		!body.username?.replace(/[^a-zA-Z0-9 ]/g, "") ||
+		!body.password?.replace(/[^a-zA-Z0-9 ]/g, "")
+	) {
+		return NextResponse.json(
+			{ error: "Special characters are not allowed" },
+			{ status: 500 }
+		);
+	}
+
+	if (!body.username.trim()) {
+		return NextResponse.json(
+			{ error: "The username is invalid" },
+			{ status: 500 }
+		);
+	}
+
+	if (!body.password.trim()) {
+		return NextResponse.json(
+			{ error: "The password is invalid" },
+			{ status: 500 }
+		);
+	}
+
+	if (body.username.length > 10) {
+		return NextResponse.json(
+			{ error: "Its username is very extensive" },
+			{ status: 500 }
+		);
+	}
+	if (body.password.length > 24) {
+		return NextResponse.json(
+			{ error: "Its password is very extensive" },
+			{ status: 500 }
+		);
+	}
+
 	try {
 		const passwordHash = await bcrypt.hash(body.password, 10);
 
@@ -22,10 +59,7 @@ export async function POST(req: NextRequest) {
 
 		return NextResponse.json({ userData }, { status: 200 });
 	} catch (err) {
-		if (
-			err instanceof PrismaClientKnownRequestError &&
-			err.code === "P2002"
-		) {
+		if (err instanceof PrismaClientKnownRequestError && err.code === "P2002") {
 			return NextResponse.json(
 				{ error: "This user is already registered" },
 				{ status: 400 }
