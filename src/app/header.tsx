@@ -35,7 +35,7 @@ export default function Header() {
 			axios
 				.post("/api/profile/getusername")
 				.then((res) => {
-					setUsername(res.data.user.username);
+					setUsername(res.data.username);
 					setGetUser(false);
 				})
 				.catch((error) => {

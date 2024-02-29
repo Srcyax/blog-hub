@@ -52,6 +52,7 @@ export async function POST(req: NextRequest) {
 			data: {
 				username: body.username,
 				password: passwordHash as string,
+				role: "USER",
 			},
 		});
 

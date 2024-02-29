@@ -13,7 +13,10 @@ export async function POST(req: NextRequest) {
 
 	var token = cookies().get("acess_token")?.value as string;
 
-	var { id } = JWT.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
+	var { id, role } = JWT.verify(
+		token,
+		process.env.JWT_SECRET as string
+	) as JwtPayload;
 
 	try {
 		const post = await prisma.post.findUnique({
@@ -21,6 +24,8 @@ export async function POST(req: NextRequest) {
 				id: body.id,
 			},
 		});
+
+		if (role === "ADMIN") return NextResponse.json(true);
 
 		if (!post) {
 			return NextResponse.json(false);

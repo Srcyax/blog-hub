@@ -24,12 +24,12 @@ export async function POST(req: NextRequest) {
 		}
 
 		const token = cookies().get("acess_token")?.value as string;
-		const { id } = JWT.verify(
+		const { id, role } = JWT.verify(
 			token as string,
 			process.env.JWT_SECRET as string
 		) as JwtPayload;
 
-		if (post.authorId !== id) {
+		if (role !== "ADMIN" && post.authorId !== id) {
 			return NextResponse.json(
 				{ error: "You do not have permission to delete this post." },
 				{ status: 403 }

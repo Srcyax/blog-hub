@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
 	try {
 		const token = cookies().get("acess_token")?.value;
 
-		const { id } = JWT.verify(
+		const { id, role } = JWT.verify(
 			token as string,
 			process.env.JWT_SECRET as string
 		) as JwtPayload;
@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
 			return NextResponse.json({ error: "Post not found" }, { status: 404 });
 		}
 
-		if (post.authorId !== id) {
+		if (role !== "ADMIN" && post.authorId !== id) {
 			return NextResponse.json({ error: "User not allowed" }, { status: 500 });
 		}
 

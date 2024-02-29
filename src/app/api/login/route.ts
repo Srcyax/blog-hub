@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
 		}
 
 		const acessToken = JWT.sign(
-			{ username: user.username, id: user.id },
+			{ username: user.username, id: user.id, role: user.role },
 			process.env.JWT_SECRET as string,
 			{
 				expiresIn: "2h",

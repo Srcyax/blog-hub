@@ -49,13 +49,13 @@ export async function POST(req: NextRequest) {
 
 	try {
 		const token = cookies().get("acess_token")?.value as string;
-		var user = JWT.decode(token) as JwtPayload;
+		var user = JWT.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
 
 		const post = await prisma.post.create({
 			data: {
 				title: title,
 				content: content,
-				author: user.username,
+				author: user.role === "ADMIN" ? `${user.username} (admin)` : user.username,
 				authorId: user.id,
 			},
 		});
