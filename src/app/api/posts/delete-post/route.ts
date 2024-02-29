@@ -20,16 +20,16 @@ export async function POST(req: NextRequest) {
 		});
 
 		if (!post) {
-			return NextResponse.json(
-				{ error: "Post not found" },
-				{ status: 404 }
-			);
+			return NextResponse.json({ error: "Post not found" }, { status: 404 });
 		}
 
 		const token = cookies().get("acess_token")?.value as string;
-		var user = JWT.decode(token) as JwtPayload;
+		const { id } = JWT.verify(
+			token as string,
+			process.env.JWT_SECRET as string
+		) as JwtPayload;
 
-		if (post.authorId !== user.id) {
+		if (post.authorId !== id) {
 			return NextResponse.json(
 				{ error: "You do not have permission to delete this post." },
 				{ status: 403 }

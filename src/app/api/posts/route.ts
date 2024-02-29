@@ -24,10 +24,7 @@ export async function POST(req: NextRequest) {
 	}
 
 	if (!title.trim()) {
-		return NextResponse.json(
-			{ error: "The title is invalid" },
-			{ status: 500 }
-		);
+		return NextResponse.json({ error: "The title is invalid" }, { status: 500 });
 	}
 
 	if (!content.trim()) {
@@ -65,10 +62,7 @@ export async function POST(req: NextRequest) {
 		return NextResponse.json({ message: "Sucess", post }, { status: 200 });
 	} catch (err) {
 		console.log(err);
-		if (
-			err instanceof PrismaClientKnownRequestError &&
-			err.code === "P2002"
-		) {
+		if (err instanceof PrismaClientKnownRequestError && err.code === "P2002") {
 			return NextResponse.json(
 				{ error: "This title is already posted" },
 				{ status: 403 }

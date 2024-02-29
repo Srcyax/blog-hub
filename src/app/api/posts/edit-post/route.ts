@@ -10,7 +10,8 @@ export async function POST(req: NextRequest) {
 
 	const hasToken = cookies().has("acess_token");
 
-	if (!hasToken) return NextResponse.json({ error: "User not allowed" });
+	if (!hasToken)
+		return NextResponse.json({ error: "User not allowed" }, { status: 500 });
 
 	if (
 		!title?.replace(/[^a-zA-Z0-9 ]/g, "") ||
@@ -23,10 +24,7 @@ export async function POST(req: NextRequest) {
 	}
 
 	if (!title.trim()) {
-		return NextResponse.json(
-			{ error: "The title is invalid" },
-			{ status: 500 }
-		);
+		return NextResponse.json({ error: "The title is invalid" }, { status: 500 });
 	}
 
 	if (!content.trim()) {
@@ -50,6 +48,27 @@ export async function POST(req: NextRequest) {
 	}
 
 	try {
+		const token = cookies().get("acess_token")?.value;
+
+		const { id } = JWT.verify(
+			token as string,
+			process.env.JWT_SECRET as string
+		) as JwtPayload;
+
+		const post = await prisma.post.findUnique({
+			where: {
+				id: body.id,
+			},
+		});
+
+		if (!post) {
+			return NextResponse.json({ error: "Post not found" }, { status: 404 });
+		}
+
+		if (post.authorId !== id) {
+			return NextResponse.json({ error: "User not allowed" }, { status: 500 });
+		}
+
 		const updatePost = await prisma.post.update({
 			where: {
 				id: body.id,

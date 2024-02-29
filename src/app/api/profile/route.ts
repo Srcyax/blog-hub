@@ -17,23 +17,29 @@ export async function POST(req: NextRequest) {
 	const token = cookies().get("acess_token")?.value;
 
 	try {
-		const user = JWT.verify(
+		const { id } = JWT.verify(
 			token as string,
 			process.env.JWT_SECRET as string
 		) as JwtPayload;
 
 		const profile = await prisma.user.update({
 			where: {
-				id: user.id,
+				id: id,
 			},
 			data: {
 				username: body.newUsername,
 			},
 		});
 
+		if (!profile) {
+			return NextResponse.json({ error: "Not authorized" }, { status: 401 });
+		}
+
+		console.log(profile.username);
+
 		await prisma.post.updateMany({
 			where: {
-				authorId: body.userId,
+				authorId: id,
 			},
 			data: {
 				author: body.newUsername,

@@ -9,12 +9,24 @@ export async function POST(req: NextRequest) {
 	var hasToken = cookies().has("acess_token");
 
 	if (!hasToken) {
-		return NextResponse.json({ error: "User not allowed" });
+		return NextResponse.json({ error: "User not allowed" }, { status: 401 });
 	}
 
 	try {
 		const token = cookies().get("acess_token")?.value as string;
-		var user = JWT.decode(token) as JwtPayload;
+		const userTokenData = JWT.decode(token) as JwtPayload;
+
+		const userInfo = await prisma.user.findUnique({
+			where: {
+				id: userTokenData.id,
+			},
+		});
+
+		if (!userInfo) {
+			return NextResponse.json({ error: "User not allowed" }, { status: 401 });
+		}
+
+		const { password, ...user } = userInfo;
 
 		return NextResponse.json({ user }, { status: 200 });
 	} catch (err) {

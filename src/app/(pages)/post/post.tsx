@@ -25,7 +25,7 @@ export default function BlogPost({
 
 	axios
 		.post("/api/posts/edit-post/auth", {
-			authorId: authorId,
+			id: id,
 		})
 		.then((res) => {
 			setAuth(res.data);
@@ -39,9 +39,7 @@ export default function BlogPost({
 				<div className="flex gap-2 items-center">
 					<Avatar className="shadow-xl">
 						<AvatarImage src="" />
-						<AvatarFallback>
-							{author?.charAt(0).toUpperCase()}
-						</AvatarFallback>
+						<AvatarFallback>{author?.charAt(0).toUpperCase()}</AvatarFallback>
 					</Avatar>
 					<strong className="text-green-500">{author}</strong>
 					{authorized ? (

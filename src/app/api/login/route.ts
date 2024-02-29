@@ -23,10 +23,7 @@ export async function POST(req: NextRequest) {
 		});
 
 		if (!user) {
-			return NextResponse.json(
-				{ error: "User not found" },
-				{ status: 404 }
-			);
+			return NextResponse.json({ error: "User not found" }, { status: 404 });
 		}
 
 		const passwordVerify = await bcrypt.compare(
@@ -35,10 +32,7 @@ export async function POST(req: NextRequest) {
 		);
 
 		if (!passwordVerify) {
-			return NextResponse.json(
-				{ error: "Wrong password" },
-				{ status: 404 }
-			);
+			return NextResponse.json({ error: "Wrong password" }, { status: 404 });
 		}
 
 		const acessToken = JWT.sign(
@@ -50,7 +44,7 @@ export async function POST(req: NextRequest) {
 		);
 
 		cookies().set("acess_token", acessToken, {
-			maxAge: 60 * 60,
+			maxAge: 60 * 120,
 			secure: false,
 			httpOnly: true,
 		});
