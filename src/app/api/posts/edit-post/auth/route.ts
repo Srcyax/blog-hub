@@ -25,11 +25,11 @@ export async function POST(req: NextRequest) {
 			},
 		});
 
-		if (role === "ADMIN") return NextResponse.json(true);
-
 		if (!post) {
 			return NextResponse.json(false);
 		}
+
+		if (role === "ADMIN") return NextResponse.json(true);
 
 		if (post.authorId !== id) {
 			return NextResponse.json(false);

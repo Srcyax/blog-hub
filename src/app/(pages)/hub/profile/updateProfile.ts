@@ -5,7 +5,7 @@ export async function handleEditProfile(newUsername: string) {
 	if (!newUsername) return;
 
 	await axios
-		.post("/api/profile", {
+		.post("/api/profile/updateProfile", {
 			newUsername: newUsername,
 		})
 		.then((res) => {

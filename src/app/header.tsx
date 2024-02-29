@@ -80,7 +80,9 @@ export default function Header() {
 						<SheetTrigger className="hover:opacity-70 transition-all">
 							<Avatar className="shadow-xl">
 								<AvatarImage src="" />
-								<AvatarFallback>{username?.charAt(0).toUpperCase()}</AvatarFallback>
+								<AvatarFallback>
+									{username?.charAt(0).toUpperCase()}
+								</AvatarFallback>
 							</Avatar>
 						</SheetTrigger>
 						<SheetContent className="w-[400px] sm:w-[540px]">
@@ -107,7 +109,9 @@ export default function Header() {
 									<Button
 										onClick={() => {
 											setSubmit(true);
-											handleEditProfile(newUsername as string).then(() => {
+											handleEditProfile(
+												newUsername as string
+											).then(() => {
 												setSubmit(false);
 											});
 										}}

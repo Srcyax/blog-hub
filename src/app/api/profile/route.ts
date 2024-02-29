@@ -5,51 +5,25 @@ import JWT, { JwtPayload } from "jsonwebtoken";
 
 export async function POST(req: NextRequest) {
 	const body = await req.json();
-
 	const prisma = new PrismaClient();
 
-	var hasToken = cookies().has("acess_token");
-
-	if (!hasToken) {
-		return NextResponse.json({ error: "Not authorized" }, { status: 401 });
-	}
-
-	const token = cookies().get("acess_token")?.value;
-
 	try {
-		const { id } = JWT.verify(
-			token as string,
-			process.env.JWT_SECRET as string
-		) as JwtPayload;
-
-		const profile = await prisma.user.update({
+		const profile = await prisma.user.findUnique({
 			where: {
-				id: id,
-			},
-			data: {
-				username: body.newUsername,
+				id: body.id,
 			},
 		});
 
 		if (!profile) {
-			return NextResponse.json({ error: "Not authorized" }, { status: 401 });
+			return NextResponse.json(
+				{ error: "User not found" },
+				{ status: 404 }
+			);
 		}
 
-		console.log(profile.username);
+		const { password, ...user } = profile;
 
-		await prisma.post.updateMany({
-			where: {
-				authorId: id,
-			},
-			data: {
-				author: body.newUsername,
-			},
-		});
-
-		return NextResponse.json(
-			{ message: "Username changed successfully", profile },
-			{ status: 200 }
-		);
+		return NextResponse.json({ user });
 	} catch (err) {
 		console.log(err);
 		return NextResponse.json({ error: err }, { status: 500 });
