@@ -65,9 +65,7 @@ export default function Hub() {
 		for (let i = 1; i <= totalPages; i++) {
 			pageNumbers.push(
 				<PaginationItem key={i}>
-					<PaginationLink onClick={() => goToPage(i)}>
-						{i}
-					</PaginationLink>
+					<PaginationLink onClick={() => goToPage(i)}>{i}</PaginationLink>
 				</PaginationItem>
 			);
 		}
@@ -101,8 +99,7 @@ export default function Hub() {
 									<PaginationNext
 										className="cursor-pointer"
 										onClick={() => {
-											if (currentPage === totalPages)
-												return;
+											if (currentPage === totalPages) return;
 											nextPage();
 										}}
 									/>
@@ -113,7 +110,7 @@ export default function Hub() {
 				</div>
 				{!isPostsLoaded ? (
 					<div className="grid desktop:grid-cols-4 smartphone:grid-cols-1 tablet:grid-cols-2 laptop:grid-cols-3 gap-10 overflow-y-auto">
-						<Skeleton className="h-[305px] w-[250px] rounded-xl shadow-3xl" />
+						<Skeleton className="h-[305px] w-[250px] rounded-xl shadow-3xl m-5" />
 					</div>
 				) : null}
 				<div className="grid desktop:grid-cols-4 smartphone:grid-cols-1 tablet:grid-cols-2 laptop:grid-cols-3 gap-10 overflow-y-auto">

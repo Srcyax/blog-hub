@@ -1,5 +1,6 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Content from "./postContent";
 import DeletePost from "./delete/postDelete";
 import EditPost from "./edit/postEdit";
@@ -22,7 +23,7 @@ export default function BlogPost({
 	authorId,
 }: PostInfo) {
 	const [authorized, setAuth] = useState<boolean>(false);
-
+	const router = useRouter();
 	axios
 		.post("/api/posts/edit-post/auth", {
 			id: id,
@@ -37,11 +38,14 @@ export default function BlogPost({
 
 			<p className="m-5">
 				<div className="flex gap-2 items-center">
-					<Avatar className="shadow-xl">
+					<Avatar
+						onClick={() => {
+							router.push(`hub/profile/${authorId}`);
+						}}
+						className="shadow-xl cursor-pointer hover:border-2"
+					>
 						<AvatarImage src="" />
-						<AvatarFallback>
-							{author?.charAt(0).toUpperCase()}
-						</AvatarFallback>
+						<AvatarFallback>{author?.charAt(0).toUpperCase()}</AvatarFallback>
 					</Avatar>
 					<strong className="text-green-500">{author}</strong>
 					{authorized ? (
