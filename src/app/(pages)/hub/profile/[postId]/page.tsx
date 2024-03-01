@@ -79,7 +79,6 @@ export default function Page({ params }: any) {
 
 	return (
 		<div>
-			<Header />
 			<main className="m-16 flex flex-col gap-5">
 				<div>
 					<Button

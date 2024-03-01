@@ -79,9 +79,7 @@ export default function Header() {
 						<DropdownMenuTrigger>
 							<Avatar className="shadow-xl">
 								<AvatarImage src="" />
-								<AvatarFallback>
-									{user?.username?.charAt(0).toUpperCase()}
-								</AvatarFallback>
+								<AvatarFallback>{user?.username?.charAt(0).toUpperCase()}</AvatarFallback>
 							</Avatar>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent>
