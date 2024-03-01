@@ -5,6 +5,12 @@ import JWT, { JwtPayload } from "jsonwebtoken";
 export async function POST(req: NextRequest) {
 	const body = await req.json();
 
+	var hasToken = cookies().has("acess_token");
+
+	if (!hasToken) {
+		return NextResponse.json(false);
+	}
+
 	var token = cookies().get("acess_token")?.value as string;
 	const { id } = JWT.verify(
 		token,
