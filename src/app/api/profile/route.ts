@@ -12,6 +12,9 @@ export async function POST(req: NextRequest) {
 			where: {
 				id: body.id,
 			},
+			include: {
+				posts: true,
+			},
 		});
 
 		if (!profile) {

@@ -9,12 +9,30 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Loading } from "@/components/ui/loading";
 import { toast } from "sonner";
-import Header from "@/app/header";
+import BlogPost from "@/app/(pages)/post/post";
+
+import {
+	Carousel,
+	CarouselContent,
+	CarouselItem,
+	CarouselNext,
+	CarouselPrevious,
+} from "@/components/ui/carousel";
+import Content from "@/app/(pages)/post/postContent";
 
 type UserProps = {
 	id: number;
 	username: string;
 	bio: string;
+	posts: PostsProps[];
+};
+
+type PostsProps = {
+	id: number;
+	title: string;
+	content: string;
+	author: string;
+	authorId: number;
 };
 
 export default function Page({ params }: any) {
@@ -109,7 +127,7 @@ export default function Page({ params }: any) {
 							) : (
 								<div className="flex flex-col gap-2 items-center">
 									<h1>{profileUser?.username}</h1>
-									<h1>{profileUser?.id}</h1>
+									<h1>ID: {profileUser?.id}</h1>
 								</div>
 							)}
 						</div>

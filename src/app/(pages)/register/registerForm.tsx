@@ -20,9 +20,6 @@ export default function RegisterForm() {
 			.max(10, { message: "* User must contain a maximum of 10 characters" }),
 		password: z
 			.string()
-			.regex(new RegExp("/^[\x00-\xFF]*$/"), {
-				message: "* Password should contain only alphabets",
-			})
 			.min(4, { message: "* Password must contain at least 4 characters" })
 			.regex(/^[\x00-\xFF]*$/, { message: "* Password should contain only alphabets" })
 			.max(24, { message: "* Password must contain a maximum of 24 characters" }),

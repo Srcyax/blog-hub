@@ -13,14 +13,8 @@ export async function POST(req: NextRequest) {
 
 	if (!hasToken) return NextResponse.json({ error: "User not allowed" });
 
-	if (
-		!title?.replace(/[^a-zA-Z0-9 ]/g, "") ||
-		!content?.replace(/[^a-zA-Z0-9 ]/g, "")
-	) {
-		return NextResponse.json(
-			{ error: "Special characters are not allowed" },
-			{ status: 500 }
-		);
+	if (!title?.replace(/[^a-zA-Z0-9 ]/g, "") || !content?.replace(/[^a-zA-Z0-9 ]/g, "")) {
+		return NextResponse.json({ error: "Special characters are not allowed" }, { status: 500 });
 	}
 
 	if (!title.trim()) {
@@ -61,16 +55,15 @@ export async function POST(req: NextRequest) {
 				content: content,
 				author: user.role === "ADMIN" ? `${user.username} (admin)` : user.username,
 				authorId: user.id,
+				userId: user.id,
 			},
 		});
+
 		return NextResponse.json({ message: "Sucess", post }, { status: 200 });
 	} catch (err) {
 		console.log(err);
 		if (err instanceof PrismaClientKnownRequestError && err.code === "P2002") {
-			return NextResponse.json(
-				{ error: "This title is already posted" },
-				{ status: 403 }
-			);
+			return NextResponse.json({ error: "This title is already posted" }, { status: 403 });
 		}
 	} finally {
 		await prisma.$disconnect();
