@@ -22,39 +22,24 @@ export async function POST(req: NextRequest) {
 			process.env.JWT_SECRET as string
 		) as JwtPayload;
 
-		const profile = await prisma.user.update({
-			where: {
-				id: id,
-			},
-			data: {
-				username: body.newUsername,
-			},
-		});
-
-		if (!profile) {
-			return NextResponse.json(
-				{ error: "Not authorized" },
-				{ status: 401 }
-			);
+		if (body.id !== id) {
+			return NextResponse.json({ error: "Not authorized" }, { status: 401 });
 		}
 
-		console.log(profile.username);
-
-		await prisma.post.updateMany({
+		const profile = await prisma.user.update({
 			where: {
-				authorId: id,
+				id: body.id,
 			},
 			data: {
-				author: body.newUsername,
+				bio: body.bio,
 			},
 		});
 
 		return NextResponse.json(
-			{ message: "Username changed successfully", profile },
+			{ message: "Bio changed successfully" },
 			{ status: 200 }
 		);
 	} catch (err) {
-		console.log(err);
 		return NextResponse.json({ error: err }, { status: 500 });
 	} finally {
 		await prisma.$disconnect();

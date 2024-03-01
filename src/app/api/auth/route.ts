@@ -7,8 +7,6 @@ export async function GET(req: NextRequest) {
 
 	var authenticated = JWT.verify(token, process.env.JWT_SECRET as string);
 
-	console.log(authenticated);
-
 	try {
 		if (!authenticated) {
 			return NextResponse.json(false);

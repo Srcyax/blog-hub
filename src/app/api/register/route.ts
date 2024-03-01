@@ -53,6 +53,7 @@ export async function POST(req: NextRequest) {
 				username: body.username,
 				password: passwordHash as string,
 				role: "USER",
+				bio: "Hi, I'm using BlogHub!",
 			},
 		});
 

@@ -1,29 +1,28 @@
 "use client";
-import {
-	Sheet,
-	SheetClose,
-	SheetContent,
-	SheetDescription,
-	SheetFooter,
-	SheetHeader,
-	SheetTitle,
-	SheetTrigger,
-} from "@/components/ui/sheet";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import axios from "axios";
+
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
-import { LogOut } from "lucide-react";
-import { handleEditProfile } from "./(pages)/hub/profile/updateProfile";
-import { Loading } from "@/components/ui/loading";
+
+type UserProps = {
+	id: number;
+	username: string;
+};
 
 export default function Header() {
-	const [username, setUsername] = useState<string>();
+	const [user, setUser] = useState<UserProps | null>();
 	const [submit, setSubmit] = useState<boolean>(false);
 	const [getUser, setGetUser] = useState<boolean>(true);
 	const [newUsername, setNewUsername] = useState<string>();
@@ -35,7 +34,7 @@ export default function Header() {
 			axios
 				.post("/api/profile/getusername")
 				.then((res) => {
-					setUsername(res.data.username);
+					setUser(res.data.user);
 					setGetUser(false);
 				})
 				.catch((error) => {
@@ -53,7 +52,7 @@ export default function Header() {
 				</h1>
 			</Link>
 			<section className="flex gap-4">
-				{username ? (
+				{user?.username ? (
 					<Button
 						disabled={submit}
 						variant="outline"
@@ -66,7 +65,7 @@ export default function Header() {
 					</Button>
 				) : null}
 
-				{!username && !getUser ? (
+				{!user?.username && !getUser ? (
 					<Button
 						className="px-5 hover:px-6 py-2 rounded-md shadow-3xl transition-all"
 						onClick={() => {
@@ -76,65 +75,36 @@ export default function Header() {
 						Login
 					</Button>
 				) : (
-					<Sheet>
-						<SheetTrigger className="hover:opacity-70 transition-all">
+					<DropdownMenu>
+						<DropdownMenuTrigger>
 							<Avatar className="shadow-xl">
 								<AvatarImage src="" />
 								<AvatarFallback>
-									{username?.charAt(0).toUpperCase()}
+									{user?.username?.charAt(0).toUpperCase()}
 								</AvatarFallback>
 							</Avatar>
-						</SheetTrigger>
-						<SheetContent className="w-[400px] sm:w-[540px]">
-							<SheetHeader>
-								<SheetTitle>Edit profile</SheetTitle>
-							</SheetHeader>
-							<SheetFooter className="flex flex-col justify-between items-center">
-								<div className="flex flex-col items-center gap-4 m-9">
-									<Input
-										maxLength={25}
-										defaultValue={username}
-										onChange={(e) => {
-											setNewUsername(e.target.value);
-										}}
-										type="text"
-										placeholder="Username"
-									/>
-									<Input
-										maxLength={25}
-										disabled={true}
-										type="text"
-										placeholder="Url image"
-									/>
-									<Button
-										onClick={() => {
-											setSubmit(true);
-											handleEditProfile(
-												newUsername as string
-											).then(() => {
-												setSubmit(false);
-											});
-										}}
-									>
-										Submit
-									</Button>
-									{submit ? <Loading /> : null}
-								</div>
-								<div className="absolute bottom-2">
-									<Button
-										className="flex gap-3"
-										onClick={() => {
-											axios.get("api/logout").then(() => {
-												location.reload();
-											});
-										}}
-									>
-										Log out <LogOut />
-									</Button>
-								</div>
-							</SheetFooter>
-						</SheetContent>
-					</Sheet>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent>
+							<DropdownMenuLabel>{user?.username}</DropdownMenuLabel>
+							<DropdownMenuSeparator />
+							<DropdownMenuItem
+								onClick={() => {
+									router.push(`/hub/profile/${user?.id}`);
+								}}
+							>
+								Profile
+							</DropdownMenuItem>
+							<DropdownMenuItem
+								onClick={() => {
+									axios.get("api/logout").then(() => {
+										location.reload();
+									});
+								}}
+							>
+								Log out
+							</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
 				)}
 			</section>
 		</header>

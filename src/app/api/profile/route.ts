@@ -15,14 +15,10 @@ export async function POST(req: NextRequest) {
 		});
 
 		if (!profile) {
-			return NextResponse.json(
-				{ error: "User not found" },
-				{ status: 404 }
-			);
+			return NextResponse.json({ error: "User not found" }, { status: 404 });
 		}
 
 		const { password, ...user } = profile;
-
 		return NextResponse.json({ user });
 	} catch (err) {
 		console.log(err);
