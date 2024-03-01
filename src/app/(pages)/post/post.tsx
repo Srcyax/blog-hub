@@ -15,13 +15,7 @@ interface PostInfo {
 	authorId: number;
 }
 
-export default function BlogPost({
-	id,
-	title,
-	content,
-	author,
-	authorId,
-}: PostInfo) {
+export default function BlogPost({ id, title, content, author, authorId }: PostInfo) {
 	const [authorized, setAuth] = useState<boolean>(false);
 	const router = useRouter();
 	axios

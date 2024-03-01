@@ -27,17 +27,13 @@ export default function EditPost(info: PostInfo) {
 	const schema = z.object({
 		title: z
 			.string()
-			.regex(new RegExp("^[a-zA-Z]"), {
-				message: "* Title should contain only alphabets",
-			})
 			.min(2, { message: "* Title must contain at least 2 characters" })
+			.regex(/^[\x00-\xFF]*$/, { message: "* Title should contain only alphabets" })
 			.max(10, { message: "* Title must contain a maximum of 10 characters" }),
 		content: z
 			.string()
-			.regex(new RegExp("^[a-zA-Z]"), {
-				message: "* Content should contain only alphabets",
-			})
 			.min(2, { message: "* Content must contain at least 2 characters" })
+			.regex(/^[\x00-\xFF]*$/, { message: "* Content should contain only alphabets" })
 			.max(255, { message: "* Content must contain a maximum of 255 characters" }),
 	});
 	const {
@@ -66,7 +62,7 @@ export default function EditPost(info: PostInfo) {
 				}, 1000);
 			})
 			.catch((error) => {
-				toast(error.response.data.error);
+				toast.error(error.response.data.error);
 				setEdited(false);
 			});
 	}
@@ -92,9 +88,7 @@ export default function EditPost(info: PostInfo) {
 									placeholder="Title"
 								/>
 								{errors.title?.message && (
-									<p className="my-1 text-[12px] text-red-500">
-										{errors.title?.message as string}
-									</p>
+									<p className="my-1 text-[12px] text-red-500">{errors.title?.message as string}</p>
 								)}
 							</div>
 							<div className="w-full">
@@ -106,9 +100,7 @@ export default function EditPost(info: PostInfo) {
 									placeholder="Enter your content message here."
 								/>
 								{errors.content?.message && (
-									<p className="my-1 text-[12px] text-red-500">
-										{errors.content?.message as string}
-									</p>
+									<p className="my-1 text-[12px] text-red-500">{errors.content?.message as string}</p>
 								)}
 							</div>
 							<div className="flex flex-col gap-2 items-center">

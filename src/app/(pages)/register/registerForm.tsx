@@ -15,17 +15,16 @@ export default function RegisterForm() {
 	const schema = z.object({
 		username: z
 			.string()
-			.regex(new RegExp("^[a-zA-Z]"), {
-				message: "* User should contain only alphabets",
-			})
 			.min(3, { message: "* User must contain at least 4 characters" })
+			.regex(/^[\x00-\xFF]*$/, { message: "* User should contain only alphabets" })
 			.max(10, { message: "* User must contain a maximum of 10 characters" }),
 		password: z
 			.string()
-			.regex(new RegExp("^[a-zA-Z]"), {
+			.regex(new RegExp("/^[\x00-\xFF]*$/"), {
 				message: "* Password should contain only alphabets",
 			})
 			.min(4, { message: "* Password must contain at least 4 characters" })
+			.regex(/^[\x00-\xFF]*$/, { message: "* Password should contain only alphabets" })
 			.max(24, { message: "* Password must contain a maximum of 24 characters" }),
 	});
 	const {
@@ -51,11 +50,11 @@ export default function RegisterForm() {
 			.catch((error) => {
 				if (error.response) {
 					if (error.response.status) {
-						toast("(" + error.response.status + ") " + error.response.data.error);
+						toast.error("(" + error.response.status + ") " + error.response.data.error);
 						setRegister(false);
 					}
 				} else {
-					toast("Error when making requests");
+					toast.error("Error when making requests");
 					console.error("Error when making request:", error.message);
 					setRegister(false);
 				}
@@ -68,29 +67,15 @@ export default function RegisterForm() {
 			onSubmit={handleSubmit(onSubmit)}
 		>
 			<div className="items-center w-full">
-				<Input
-					{...register("username")}
-					maxLength={10}
-					type="text"
-					placeholder="Username"
-				/>
+				<Input {...register("username")} maxLength={10} type="text" placeholder="Username" />
 				{errors.username?.message && (
-					<p className="my-1 text-[12px] text-red-500">
-						{errors.username?.message as string}
-					</p>
+					<p className="my-1 text-[12px] text-red-500">{errors.username?.message as string}</p>
 				)}
 			</div>
 			<div className="items-center w-full">
-				<Input
-					{...register("password")}
-					maxLength={24}
-					type="password"
-					placeholder="Password"
-				/>
+				<Input {...register("password")} maxLength={24} type="password" placeholder="Password" />
 				{errors.password?.message && (
-					<p className="my-1 text-[12px] text-red-500">
-						{errors.password?.message as string}
-					</p>
+					<p className="my-1 text-[12px] text-red-500">{errors.password?.message as string}</p>
 				)}
 			</div>
 			<Button type="submit" disabled={isRegister} className="mt-3">

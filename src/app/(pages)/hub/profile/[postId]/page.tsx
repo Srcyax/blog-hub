@@ -9,7 +9,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Loading } from "@/components/ui/loading";
 import { toast } from "sonner";
-import { Input } from "@/components/ui/input";
 import Header from "@/app/header";
 
 type UserProps = {
@@ -40,7 +39,7 @@ export default function Page({ params }: any) {
 				setAuthenticated(res.data);
 			})
 			.catch((error) => {
-				toast(error.response.data.error);
+				toast.error(error.response.data.error);
 			});
 
 		axios
@@ -72,11 +71,9 @@ export default function Page({ params }: any) {
 				id: profileUser?.id,
 				bio: bio,
 			})
-			.then((res) => {
-				toast(res.data.message);
-			})
+			.then((res) => {})
 			.catch((error) => {
-				toast(error.response.data.error);
+				toast.error(error.response.data.error);
 			});
 	}
 
@@ -101,9 +98,7 @@ export default function Page({ params }: any) {
 						) : (
 							<Avatar className="shadow-xl w-20 h-20">
 								<AvatarImage src="" />
-								<AvatarFallback>
-									{profileUser?.username?.charAt(0).toUpperCase()}
-								</AvatarFallback>
+								<AvatarFallback>{profileUser?.username?.charAt(0).toUpperCase()}</AvatarFallback>
 							</Avatar>
 						)}
 						<div className="flex flex-col gap-2 items-center">
@@ -158,9 +153,18 @@ export default function Page({ params }: any) {
 													disabled={submit}
 													onClick={() => {
 														setSubmit(true);
-														handleEditBio().then(() => {
-															setSubmit(false);
-															setEditBio(false);
+														toast.promise(handleEditBio(), {
+															loading: "Updating bio...",
+															success: (data) => {
+																setSubmit(false);
+																setEditBio(false);
+																return "Bio changed successfully";
+															},
+															error: () => {
+																setSubmit(false);
+																setEditBio(false);
+																return "Error changing bio";
+															},
 														});
 													}}
 												>
@@ -190,18 +194,12 @@ export default function Page({ params }: any) {
 						) : (
 							<Avatar className="shadow-xl w-12 h-12">
 								<AvatarImage src="" />
-								<AvatarFallback>
-									{user?.username.charAt(0).toUpperCase()}
-								</AvatarFallback>
+								<AvatarFallback>{user?.username.charAt(0).toUpperCase()}</AvatarFallback>
 							</Avatar>
 						)}
 					</div>
 					<div className="flex flex-col gap-2 items-center justify-center w-full p-2">
-						<Textarea
-							disabled={!user}
-							className="resize-none"
-							placeholder="Comment"
-						/>
+						<Textarea disabled={!user} className="resize-none" placeholder="Comment" />
 					</div>
 				</div>
 			</main>

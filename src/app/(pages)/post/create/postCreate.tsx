@@ -15,17 +15,13 @@ export default function Create() {
 	const schema = z.object({
 		title: z
 			.string()
-			.regex(new RegExp("^[a-zA-Z]"), {
-				message: "* Title should contain only alphabets",
-			})
 			.min(2, { message: "* Title must contain at least 2 characters" })
+			.regex(/^[\x00-\xFF]*$/, { message: "* Title should contain only alphabets" })
 			.max(10, { message: "* Title must contain a maximum of 10 characters" }),
 		content: z
 			.string()
-			.regex(new RegExp("^[a-zA-Z]"), {
-				message: "* Content should contain only alphabets",
-			})
 			.min(2, { message: "* Content must contain at least 2 characters" })
+			.regex(/^[\x00-\xFF]*$/, { message: "* Content should contain only alphabets" })
 			.max(255, { message: "* Content must contain a maximum of 255 characters" }),
 	});
 	const {
@@ -52,10 +48,10 @@ export default function Create() {
 			.catch((error) => {
 				if (error.response) {
 					if (error.response.status) {
-						toast("(" + error.response.status + ") " + error.response.data.error);
+						toast.error("(" + error.response.status + ") " + error.response.data.error);
 						setPost(false);
 					} else {
-						toast("Unable to publish this post");
+						toast.error("Unable to publish this post");
 						setPost(false);
 					}
 				}
@@ -68,16 +64,9 @@ export default function Create() {
 			className="flex flex-col justify-center items-center gap-4 shadow-3xl border-2 p-5 rounded-md"
 		>
 			<div className="w-full">
-				<Input
-					{...register("title")}
-					maxLength={25}
-					type="text"
-					placeholder="Title"
-				/>
+				<Input {...register("title")} maxLength={25} type="text" placeholder="Title" />
 				{errors.title?.message && (
-					<p className="my-1 text-[12px] text-red-500">
-						{errors.title?.message as string}
-					</p>
+					<p className="my-1 text-[12px] text-red-500">{errors.title?.message as string}</p>
 				)}
 			</div>
 			<div className="w-full">
@@ -88,9 +77,7 @@ export default function Create() {
 					placeholder="Enter your content message here."
 				/>
 				{errors.content?.message && (
-					<p className="my-1 text-[12px] text-red-500">
-						{errors.content?.message as string}
-					</p>
+					<p className="my-1 text-[12px] text-red-500">{errors.content?.message as string}</p>
 				)}
 			</div>
 			<Button disabled={post} type="submit" className="mt-10">
