@@ -127,7 +127,7 @@ export default function Page({ params }: any) {
 							) : (
 								<div className="flex flex-col gap-2 items-center">
 									<h1>{profileUser?.username}</h1>
-									<h1>ID: {profileUser?.id}</h1>
+									<h1>id: {profileUser?.id}</h1>
 								</div>
 							)}
 						</div>
