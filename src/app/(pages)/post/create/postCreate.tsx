@@ -8,9 +8,34 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function Create() {
-	const { handleSubmit, register } = useForm();
+	const schema = z.object({
+		title: z
+			.string()
+			.regex(new RegExp("^[a-zA-Z]"), {
+				message: "* Title should contain only alphabets",
+			})
+			.min(2, { message: "* Title must contain at least 2 characters" })
+			.max(10, { message: "* Title must contain a maximum of 10 characters" }),
+		content: z
+			.string()
+			.regex(new RegExp("^[a-zA-Z]"), {
+				message: "* Content should contain only alphabets",
+			})
+			.min(2, { message: "* Content must contain at least 2 characters" })
+			.max(255, { message: "* Content must contain a maximum of 255 characters" }),
+	});
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm({
+		resolver: zodResolver(schema),
+	});
+
 	const [post, setPost] = useState<boolean>();
 	const router = useRouter();
 
@@ -27,12 +52,7 @@ export default function Create() {
 			.catch((error) => {
 				if (error.response) {
 					if (error.response.status) {
-						toast(
-							"(" +
-								error.response.status +
-								") " +
-								error.response.data.error
-						);
+						toast("(" + error.response.status + ") " + error.response.data.error);
 						setPost(false);
 					} else {
 						toast("Unable to publish this post");
@@ -47,17 +67,32 @@ export default function Create() {
 			onSubmit={handleSubmit(onSubmit)}
 			className="flex flex-col justify-center items-center gap-4 shadow-3xl border-2 p-5 rounded-md"
 		>
-			<Input
-				{...register("title")}
-				maxLength={25}
-				type="text"
-				placeholder="Title"
-			/>
-			<Textarea
-				{...register("content")}
-				maxLength={255}
-				placeholder="Enter your content message here."
-			/>
+			<div className="w-full">
+				<Input
+					{...register("title")}
+					maxLength={25}
+					type="text"
+					placeholder="Title"
+				/>
+				{errors.title?.message && (
+					<p className="my-1 text-[12px] text-red-500">
+						{errors.title?.message as string}
+					</p>
+				)}
+			</div>
+			<div className="w-full">
+				<Textarea
+					{...register("content")}
+					maxLength={255}
+					className="resize-none"
+					placeholder="Enter your content message here."
+				/>
+				{errors.content?.message && (
+					<p className="my-1 text-[12px] text-red-500">
+						{errors.content?.message as string}
+					</p>
+				)}
+			</div>
 			<Button disabled={post} type="submit" className="mt-10">
 				Post
 			</Button>

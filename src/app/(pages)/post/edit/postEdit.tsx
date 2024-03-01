@@ -14,6 +14,8 @@ import { Pencil } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 type PostInfo = {
 	id: number;
@@ -22,12 +24,34 @@ type PostInfo = {
 };
 
 export default function EditPost(info: PostInfo) {
-	const { handleSubmit, register } = useForm();
+	const schema = z.object({
+		title: z
+			.string()
+			.regex(new RegExp("^[a-zA-Z]"), {
+				message: "* Title should contain only alphabets",
+			})
+			.min(2, { message: "* Title must contain at least 2 characters" })
+			.max(10, { message: "* Title must contain a maximum of 10 characters" }),
+		content: z
+			.string()
+			.regex(new RegExp("^[a-zA-Z]"), {
+				message: "* Content should contain only alphabets",
+			})
+			.min(2, { message: "* Content must contain at least 2 characters" })
+			.max(255, { message: "* Content must contain a maximum of 255 characters" }),
+	});
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm({
+		resolver: zodResolver(schema),
+	});
+
 	const [edited, setEdited] = useState<boolean>(false);
 
 	function onSubmit(data: any) {
 		setEdited(true);
-		console.log(data);
 		axios
 			.post("/api/posts/edit-post", {
 				id: info.id,
@@ -59,31 +83,39 @@ export default function EditPost(info: PostInfo) {
 				<AlertDialogHeader>
 					<form onSubmit={handleSubmit(onSubmit)}>
 						<div className="flex flex-col justify-center items-center gap-4 p-5 rounded-md">
-							<Input
-								{...register("title")}
-								defaultValue={info.title}
-								maxLength={25}
-								type="text"
-								placeholder="Title"
-							/>
-							<Textarea
-								{...register("content")}
-								defaultValue={info.content}
-								maxLength={255}
-								placeholder="Enter your content message here."
-							/>
+							<div className="w-full">
+								<Input
+									{...register("title")}
+									defaultValue={info.title}
+									maxLength={25}
+									type="text"
+									placeholder="Title"
+								/>
+								{errors.title?.message && (
+									<p className="my-1 text-[12px] text-red-500">
+										{errors.title?.message as string}
+									</p>
+								)}
+							</div>
+							<div className="w-full">
+								<Textarea
+									{...register("content")}
+									defaultValue={info.content}
+									maxLength={255}
+									className="resize-none"
+									placeholder="Enter your content message here."
+								/>
+								{errors.content?.message && (
+									<p className="my-1 text-[12px] text-red-500">
+										{errors.content?.message as string}
+									</p>
+								)}
+							</div>
 							<div className="flex flex-col gap-2 items-center">
-								<Button
-									disabled={edited}
-									className="px-44"
-									type="submit"
-								>
+								<Button disabled={edited} className="px-44" type="submit">
 									Submit
 								</Button>
-								<AlertDialogCancel
-									disabled={edited}
-									className="px-44"
-								>
+								<AlertDialogCancel disabled={edited} className="px-44">
 									Cancel
 								</AlertDialogCancel>
 								{edited ? <Loading /> : null}

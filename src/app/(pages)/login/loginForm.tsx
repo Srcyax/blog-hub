@@ -8,9 +8,34 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
 import { Loading } from "@/components/ui/loading";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function LoginForm() {
-	const { handleSubmit, register } = useForm();
+	const schema = z.object({
+		username: z
+			.string()
+			.regex(new RegExp("^[a-zA-Z]"), {
+				message: "* User should contain only alphabets",
+			})
+			.min(3, { message: "* User must contain at least 4 characters" })
+			.max(10, { message: "* User must contain a maximum of 10 characters" }),
+		password: z
+			.string()
+			.regex(new RegExp("^[a-zA-Z]"), {
+				message: "* User should contain only alphabets",
+			})
+			.min(4, { message: "* Password must contain at least 4 characters" })
+			.max(24, { message: "* Password must contain a maximum of 24 characters" }),
+	});
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm({
+		resolver: zodResolver(schema),
+	});
+
 	const [login, setLogin] = useState<boolean>();
 	const router = useRouter();
 
@@ -27,12 +52,7 @@ export default function LoginForm() {
 			.catch((error) => {
 				if (error.response) {
 					if (error.response.status) {
-						toast(
-							"(" +
-								error.response.status +
-								") " +
-								error.response.data.error
-						);
+						toast("(" + error.response.status + ") " + error.response.data.error);
 						setLogin(false);
 					}
 				} else {
@@ -49,18 +69,33 @@ export default function LoginForm() {
 			action=""
 			className="flex flex-col justify-center items-center gap-4 shadow-3xl border-2 p-5 rounded-md transition-all duration-200"
 		>
-			<Input
-				{...register("username")}
-				maxLength={10}
-				type="text"
-				placeholder="Username"
-			/>
-			<Input
-				{...register("password")}
-				maxLength={24}
-				type="password"
-				placeholder="Password"
-			/>
+			<div className="items-center w-full">
+				<Input
+					{...register("username")}
+					maxLength={10}
+					type="text"
+					placeholder="Username"
+				/>
+				{errors.username?.message && (
+					<p className="my-1 text-[12px] text-red-500">
+						{errors.username?.message as string}
+					</p>
+				)}
+			</div>
+			<div className="items-center w-full">
+				<Input
+					{...register("password")}
+					maxLength={24}
+					type="password"
+					placeholder="Password"
+				/>
+				{errors.password?.message && (
+					<p className="my-1 text-[12px] text-red-500">
+						{errors.password?.message as string}
+					</p>
+				)}
+			</div>
+
 			<Button type="submit" disabled={login} className="mt-3">
 				Log in
 			</Button>

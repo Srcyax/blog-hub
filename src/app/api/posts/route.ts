@@ -30,6 +30,7 @@ export async function POST(req: NextRequest) {
 	if (!content.trim()) {
 		return NextResponse.json(
 			{ error: "The content is invalid" },
+
 			{ status: 500 }
 		);
 	}
@@ -37,12 +38,15 @@ export async function POST(req: NextRequest) {
 	if (title.length > 25) {
 		return NextResponse.json(
 			{ error: "Its title is very extensive" },
+
 			{ status: 500 }
 		);
 	}
+
 	if (content.length > 255) {
 		return NextResponse.json(
 			{ error: "Its content is very extensive" },
+
 			{ status: 500 }
 		);
 	}

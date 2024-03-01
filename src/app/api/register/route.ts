@@ -14,34 +14,34 @@ export async function POST(req: NextRequest) {
 	) {
 		return NextResponse.json(
 			{ error: "Special characters are not allowed" },
-			{ status: 500 }
+			{ status: 200 }
 		);
 	}
 
 	if (!body.username.trim()) {
 		return NextResponse.json(
 			{ error: "The username is invalid" },
-			{ status: 500 }
+			{ status: 200 }
 		);
 	}
 
 	if (!body.password.trim()) {
 		return NextResponse.json(
 			{ error: "The password is invalid" },
-			{ status: 500 }
+			{ status: 200 }
 		);
 	}
 
 	if (body.username.length > 10) {
 		return NextResponse.json(
 			{ error: "Its username is very extensive" },
-			{ status: 500 }
+			{ status: 200 }
 		);
 	}
 	if (body.password.length > 24) {
 		return NextResponse.json(
 			{ error: "Its password is very extensive" },
-			{ status: 500 }
+			{ status: 200 }
 		);
 	}
 

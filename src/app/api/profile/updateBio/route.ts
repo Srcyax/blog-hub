@@ -16,6 +16,20 @@ export async function POST(req: NextRequest) {
 
 	const token = cookies().get("acess_token")?.value;
 
+	if (!body.bio?.replace(/[^a-zA-Z0-9 ]/g, "")) {
+		return NextResponse.json(
+			{ error: "Special characters are not allowed" },
+			{ status: 200 }
+		);
+	}
+
+	if (!body.bio.trim()) {
+		return NextResponse.json(
+			{ error: "The bio content is invalid" },
+			{ status: 200 }
+		);
+	}
+
 	try {
 		const { id } = JWT.verify(
 			token as string,

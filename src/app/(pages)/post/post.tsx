@@ -37,7 +37,7 @@ export default function BlogPost({
 			<Content title={title} content={content} />
 
 			<p className="m-5">
-				<div className="flex gap-2 items-center">
+				<div className="flex gap-4 items-center">
 					<Avatar
 						onClick={() => {
 							router.push(`hub/profile/${authorId}`);
