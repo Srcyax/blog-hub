@@ -15,7 +15,7 @@ export default function RegisterForm() {
 	const schema = z.object({
 		username: z
 			.string()
-			.min(3, { message: "* User must contain at least 4 characters" })
+			.min(3, { message: "* User must contain at least 3 characters" })
 			.regex(/^[\x00-\xFF]*$/, { message: "* User should contain only alphabets" })
 			.max(10, { message: "* User must contain a maximum of 10 characters" }),
 		password: z

@@ -87,13 +87,14 @@ export default function Header() {
 							<DropdownMenuSeparator />
 							<DropdownMenuItem
 								onClick={() => {
-									router.push(`/hub/profile/${user?.id}`);
+									if (user?.username) router.push(`/hub/profile/${user?.id}`);
 								}}
 							>
 								Profile
 							</DropdownMenuItem>
 							<DropdownMenuItem
 								onClick={() => {
+									if (!user?.username) return;
 									axios.get("api/logout").then(() => {
 										location.reload();
 									});

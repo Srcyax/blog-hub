@@ -26,6 +26,7 @@ export async function POST(req: NextRequest) {
 			data: {
 				content: body.content,
 				userId: body.id,
+				author: user.username,
 			},
 		});
 
