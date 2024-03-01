@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
 				id: body.id,
 			},
 			include: {
-				posts: true,
+				comment: true,
 			},
 		});
 

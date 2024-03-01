@@ -9,30 +9,22 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Loading } from "@/components/ui/loading";
 import { toast } from "sonner";
-import BlogPost from "@/app/(pages)/post/post";
 
-import {
-	Carousel,
-	CarouselContent,
-	CarouselItem,
-	CarouselNext,
-	CarouselPrevious,
-} from "@/components/ui/carousel";
-import Content from "@/app/(pages)/post/postContent";
+import CommentArea from "./components/comment";
 
-type UserProps = {
-	id: number;
-	username: string;
-	bio: string;
-	posts: PostsProps[];
-};
-
-type PostsProps = {
+type CommentsProps = {
 	id: number;
 	title: string;
 	content: string;
 	author: string;
 	authorId: number;
+};
+
+type UserProps = {
+	id: number;
+	username: string;
+	bio: string;
+	comment: CommentsProps[];
 };
 
 export default function Page({ params }: any) {
@@ -49,6 +41,7 @@ export default function Page({ params }: any) {
 	const router = useRouter();
 
 	useEffect(() => {
+		console.log(profileUser?.comment);
 		axios
 			.post("/api/profile/auth", {
 				id: profileUser?.id,
@@ -65,6 +58,7 @@ export default function Page({ params }: any) {
 				id: parseInt(params.postId),
 			})
 			.then((res) => {
+				console.log(res.data.user);
 				setProfileUser(res.data.user);
 			})
 			.catch((error) => {
@@ -215,10 +209,29 @@ export default function Page({ params }: any) {
 							</Avatar>
 						)}
 					</div>
-					<div className="flex flex-col gap-2 items-center justify-center w-full p-2">
-						<Textarea disabled={!user} className="resize-none" placeholder="Comment" />
-					</div>
+
+					<CommentArea user={profileUser} />
 				</div>
+				{profileUser &&
+					profileUser.comment &&
+					profileUser.comment.toReversed().map((comment, index) => (
+						<div key={index} className="flex gap-4 items-center border-2 shadow-3xl p-5 rounded-md">
+							<div className="">
+								{!user ? (
+									<Skeleton className="w-12 h-12 rounded-full" />
+								) : (
+									<Avatar className="shadow-xl w-12 h-12">
+										<AvatarImage src="" />
+										<AvatarFallback>{user?.username.charAt(0).toUpperCase()}</AvatarFallback>
+									</Avatar>
+								)}
+							</div>
+
+							<div>
+								<h1>{comment.content}</h1>
+							</div>
+						</div>
+					))}
 			</main>
 		</div>
 	);
