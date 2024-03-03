@@ -14,34 +14,14 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { toast } from "sonner";
 
-type UserProps = {
-	id: number;
-	username: string;
-};
+import { trpc } from "./_trpc/client";
 
 export default function Header() {
-	const [user, setUser] = useState<UserProps | null>();
-	const [submit, setSubmit] = useState<boolean>(false);
-	const [getUser, setGetUser] = useState<boolean>(true);
-	const [newUsername, setNewUsername] = useState<string>();
+	const getUser = trpc.getUser.useQuery();
+	const user = getUser.data?.response;
 
 	const router = useRouter();
-
-	useEffect(() => {
-		if (getUser) {
-			axios
-				.post("/api/profile/getusername")
-				.then((res) => {
-					setUser(res.data.user);
-					setGetUser(false);
-				})
-				.catch((error) => {
-					setGetUser(false);
-				});
-		}
-	});
 
 	return (
 		<header className="flex justify-between items-center p-5 border-2 shadow-lg">
@@ -52,9 +32,8 @@ export default function Header() {
 				</h1>
 			</Link>
 			<section className="flex gap-4">
-				{user?.username ? (
+				{user ? (
 					<Button
-						disabled={submit}
 						variant="outline"
 						className="px-5 hover:px-6 py-2 rounded-md shadow-3xl transition-all"
 						onClick={() => {
@@ -65,7 +44,7 @@ export default function Header() {
 					</Button>
 				) : null}
 
-				{!user?.username && !getUser ? (
+				{!user?.username && getUser.isFetched ? (
 					<Button
 						className="px-5 hover:px-6 py-2 rounded-md shadow-3xl transition-all"
 						onClick={() => {

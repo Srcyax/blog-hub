@@ -14,6 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
 import BlogPost from "../post/post";
 import Header from "@/app/header";
+import { trpc } from "@/app/_trpc/client";
 
 interface PostInfo {
 	id: number;

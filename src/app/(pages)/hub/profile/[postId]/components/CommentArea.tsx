@@ -14,18 +14,20 @@ type CommentsProps = {
 	authorId: number;
 };
 
-type UserProps = {
-	id: number;
-	username: string;
-	bio: string;
-	comment: CommentsProps[];
-};
+type userDataProps =
+	| {
+			id: number;
+			username: string;
+			bio: string;
+			role: string;
+	  }
+	| undefined;
 
 export default function CommentArea({
 	user,
 	id,
 }: {
-	user: UserProps | null | undefined;
+	user: userDataProps | null | undefined;
 	id: number | null | undefined;
 }) {
 	const [submit, setSubmit] = useState<boolean>(false);

@@ -5,6 +5,7 @@ import Header from "./header";
 import { Toaster } from "@/components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import TanStack from "./providers/Tanstack";
+import Provider from "./_trpc/Provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +22,7 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={inter.className}>
-				{children}
+				<Provider>{children}</Provider>
 				<Toaster />
 			</body>
 		</html>
